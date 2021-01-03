@@ -9,6 +9,9 @@ import {
   Home,
   Messages,
   Hospitals,
+  ListDoctors,
+  Chat,
+  UserProfile,
 } from '../pages';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomNavigator} from '../components';
@@ -18,7 +21,7 @@ const Tab = createBottomTabNavigator();
 
 const MainApp = () => {
   return (
-    <Tab.Navigator tabBar={props => <BottomNavigator {...props} />}>
+    <Tab.Navigator tabBar={(props) => <BottomNavigator {...props} />}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Messages" component={Messages} />
       <Tab.Screen name="Hospitals" component={Hospitals} />
@@ -28,7 +31,7 @@ const MainApp = () => {
 
 const Router = () => {
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    <Stack.Navigator initialRouteName="MainApp">
       <Stack.Screen
         name="Splash"
         component={Splash}
@@ -57,6 +60,21 @@ const Router = () => {
       <Stack.Screen
         name="MainApp"
         component={MainApp}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ListDoctors"
+        component={ListDoctors}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Chat"
+        component={Chat}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="UserProfile"
+        component={UserProfile}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

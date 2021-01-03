@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {ICBack, ICNotification} from '../../../assets';
+import {ICBack, ICBackWhite, ICMessage, ICNotification} from '../../../assets';
 
 const IconOnly = ({onPress, icon}) => {
   const Icon = () => {
@@ -9,10 +9,13 @@ const IconOnly = ({onPress, icon}) => {
       return <ICBack />;
     }
     if (icon === 'back-white') {
-      return <ICBack />;
+      return <ICBackWhite />;
     }
     if (icon === 'notification') {
       return <ICNotification />;
+    }
+    if (icon === 'chat') {
+      return <ICMessage />;
     }
     return <ICBack />;
   };

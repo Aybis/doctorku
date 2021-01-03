@@ -15,6 +15,16 @@ import ICDokterBedah from './dokter_bedah.svg';
 import ICDokterAnak from './dokter_anak.svg';
 import ICDokterKandungan from './dokter_kandungan.svg';
 import ICRate from './star_half_24px.svg';
+import ICSearch from './zoom_in_24px.svg';
+import ICFilter from './filter.svg';
+import ICSend from './send_24px.svg';
+import ICVideo from './duo_24px.png';
+import ICSendActive from './send_active.svg';
+import ICSendDisable from './send_disabled.svg';
+import ICLanguage from './translate_24px_outlined.svg';
+import ICAccount from './account_circle_24px_outlined.svg';
+import ICStar from './star_outline_24px_outlined.svg';
+import ICDescription from './description_24px_outlined.svg';
 
 export {
   ICToggle,
@@ -34,4 +44,14 @@ export {
   ICDokterKandungan,
   ICDokterBedah,
   ICRate,
+  ICSearch,
+  ICFilter,
+  ICSend,
+  ICVideo,
+  ICSendActive,
+  ICSendDisable,
+  ICLanguage,
+  ICAccount,
+  ICStar,
+  ICDescription,
 };

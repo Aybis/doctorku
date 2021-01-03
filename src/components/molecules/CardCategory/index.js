@@ -1,14 +1,41 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {DUDokterUmum} from '../../../assets';
+import {
+  DUDokterAnak,
+  DUDokterBedah,
+  DUDokterKandungan,
+  DUDokterUmum,
+} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
-const CardCategory = ({title}) => {
+const CardCategory = ({category, onPress}) => {
+  const Icon = () => {
+    if (category === 'Umum') {
+      return <Image style={styles.avatar} source={DUDokterUmum} />;
+    }
+    if (category === 'Anak') {
+      return <Image style={styles.avatar} source={DUDokterAnak} />;
+    }
+    if (category === 'Bedah') {
+      return <Image style={styles.avatar} source={DUDokterBedah} />;
+    }
+    if (category === 'Jantung') {
+      return <Image style={styles.avatar} source={DUDokterBedah} />;
+    }
+    if (category === 'Kandungan') {
+      return <Image style={styles.avatar} source={DUDokterKandungan} />;
+    }
+    if (category === 'Penyakit Dalam') {
+      return <Image style={styles.avatar} source={DUDokterBedah} />;
+    }
+    return <Image style={styles.avatar} source={DUDokterUmum} />;
+  };
+
   return (
-    <TouchableOpacity style={styles.container}>
-      <Image style={styles.avatar} source={DUDokterUmum} />
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <Icon />
       <Text style={styles.textSecondary}>Saya butuh</Text>
-      <Text style={styles.textPrimary}>{title}</Text>
+      <Text style={styles.textPrimary}>Dokter {category}</Text>
     </TouchableOpacity>
   );
 };

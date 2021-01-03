@@ -5,10 +5,10 @@ import {DUAvatar} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 import {Button} from '../../atoms';
 
-const HomeProfile = () => {
+const HomeProfile = ({userProfile}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={userProfile}>
         <Image style={styles.avatar} source={DUAvatar} />
       </TouchableOpacity>
       <View style={styles.header}>

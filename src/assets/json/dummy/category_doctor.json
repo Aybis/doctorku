@@ -1,0 +1,23 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "category" : "Umum"
+        },{
+            "id": 2, 
+            "category": "Jantung"
+        },{
+            "id": 4, 
+            "category": "Anak"
+        },{
+            "id": 5, 
+            "category": "Bedah"
+        },{
+            "id": 6, 
+            "category": "Kandungan"
+        },{
+            "id": 7, 
+            "category": "Penyakit Dalam"
+        }
+    ]
+}

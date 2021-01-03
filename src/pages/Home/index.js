@@ -9,12 +9,13 @@ import {
   RatedHospitals,
 } from '../../components/molecules';
 import {colors, fonts} from '../../utils';
+import {JSONCategoryDoctor} from '../../assets';
 
-const Home = () => {
+const Home = ({navigation}) => {
   return (
     <View style={styles.page}>
-      <HomeProfile />
-      <ScrollView>
+      <HomeProfile userProfile={() => navigation.navigate('UserProfile')} />
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Text style={styles.title}>
             Mau konsultasi dengan siapa hari ini ?
@@ -23,12 +24,20 @@ const Home = () => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.cardCategory}>
                 <Gap width={16} />
-                <CardCategory title="Dokter Anak" />
-                <CardCategory title="Dokter Bedah" />
-                <CardCategory title="Dokter Jantung" />
-                <CardCategory title="Dokter Umum" />
-                <CardCategory title="Dokter Kandungan" />
-                <CardCategory title="Dokter Penyakit Dalam" />
+                {JSONCategoryDoctor.data.map((item) => {
+                  return (
+                    <CardCategory
+                      key={item.id}
+                      category={item.category}
+                      onPress={() =>
+                        navigation.navigate('ListDoctors', {
+                          data: item.category,
+                        })
+                      }
+                    />
+                  );
+                })}
+
                 <Gap width={16} />
               </View>
             </ScrollView>
