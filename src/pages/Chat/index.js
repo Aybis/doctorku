@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {DUProfileDoctor} from '../../assets';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {DUProfileDoctor1} from '../../assets';
 import {ChatItem, HeaderChat, InputChat} from '../../components';
 import {colors, fonts} from '../../utils';
 
-const Chat = ({navigation}) => {
+const Chat = ({navigation, route}) => {
+  const {name, status, image} = route.params;
+  const [photo, setphoto] = useState(image);
+
+  const setImage = () => {
+    setphoto({uri: image});
+  };
+
   return (
     <View style={styles.page}>
       {/* Start Header Component */}
       <HeaderChat
-        title="Frisca Putri"
-        source={DUProfileDoctor}
-        status="online"
+        title={name}
+        source={photo}
+        status={status}
+        onError={() => setImage()}
         onPress={() => navigation.goBack()}
       />
       {/* End Header Component */}
@@ -19,12 +28,14 @@ const Chat = ({navigation}) => {
       {/* Start Content Component */}
       <View style={styles.content}>
         <View style={styles.wrap}>
-          <Text style={styles.dateNow}>Senin, 4 Januari 2021</Text>
-          <ChatItem isMe/>
-          <ChatItem />
-          <ChatItem isMe/>
-          <ChatItem />
-          <ChatItem isMe/>
+          <KeyboardAwareScrollView>
+            <Text style={styles.dateNow}>Senin, 4 Januari 2021</Text>
+            <ChatItem isMe />
+            <ChatItem avatar={image} />
+            <ChatItem isMe />
+            <ChatItem avatar={image} />
+            <ChatItem isMe />
+          </KeyboardAwareScrollView>
         </View>
         <InputChat />
       </View>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -7,27 +7,88 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {ICFilter} from '../../assets';
+// import {ICFilter} from '../../assets';
+import {
+  DUAvatar,
+  DUProfileAlbert,
+  DUProfileDoctor2,
+  DUProfileDoctor4,
+  DUProfileDoctor5,
+  DUProfileDoctor7,
+  DUProfileDoctor8,
+  ICFilter,
+  JSONListDoctor,
+} from '../../assets';
 import {CardDoctor, Gap, Header, RatedDoctors} from '../../components';
 import {colors, fonts} from '../../utils';
 
-const ListDoctors = ({navigation}) => {
-  let list = [];
-  const ListDoctorScroll = () => {
-    for (let index = 0; index < 10; index++) {
-      list.push(
-        <CardDoctor
-          key={index}
-          onPressMessage={() => navigation.navigate('Chat')}
-        />,
-      );
-    }
-    return list;
-  };
+const ListDoctors = ({navigation, route}) => {
+  const {category} = route.params;
+  const [doctors] = useState([
+    {
+      id: 1,
+      avatar: DUAvatar,
+      name: 'Frisca Putri',
+      spesialis: 'Kandungan',
+      rate: 5,
+    },
+    {
+      id: 2,
+      avatar: DUProfileDoctor2,
+      name: 'Ayu Putri',
+      spesialis: 'Anak',
+      rate: 5,
+    },
+    {
+      id: 3,
+      avatar: DUProfileDoctor4,
+      name: 'Agus Halim',
+      spesialis: 'THT',
+      rate: 5,
+    },
+    {
+      id: 4,
+      avatar: DUProfileDoctor5,
+      name: 'Valencia',
+      spesialis: 'Kulit & Kelamin',
+      rate: 5,
+    },
+    {
+      id: 5,
+      avatar: DUProfileAlbert,
+      name: 'Johnson Astiago',
+      spesialis: 'Bedah Tulang',
+      rate: 5,
+    },
+    {
+      id: 6,
+      avatar: DUProfileDoctor7,
+      name: 'Abdul Malik',
+      spesialis: 'Anastesis',
+      rate: 5,
+    },
+    {
+      id: 7,
+      avatar: DUProfileDoctor8,
+      name: 'Anya Ger',
+      spesialis: 'Penyakit Dalam',
+      rate: 5,
+    },
+    {
+      id: 8,
+      avatar: DUProfileAlbert,
+      name: 'Tanoesoedibjo',
+      spesialis: 'Orthopedi',
+      rate: 5,
+    },
+  ]);
   return (
     <View style={styles.page}>
       {/* Start Header Component */}
-      <Header title={'Doctor '} onPress={() => navigation.goBack()} />
+      <Header
+        title={`Doctor ${category}`}
+        onPress={() => navigation.goBack()}
+      />
       {/* End Header Component */}
 
       {/* Start Rated Doctor Component */}
@@ -38,42 +99,25 @@ const ListDoctors = ({navigation}) => {
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.doctor}>
               <Gap width={16} />
-              <RatedDoctors
-                name="Frisca Putri"
-                hospital="Siloam International"
-                rate={5}
-              />
-              <RatedDoctors
-                name="Ayu Putri"
-                hospital="RS Sadikin Bandung"
-                rate={5}
-              />
-              <RatedDoctors
-                name="Rena Grande"
-                hospital="RS Bayukarta"
-                rate={5}
-              />
-              <RatedDoctors
-                name="Valencia"
-                hospital="RS Jatung Nasional"
-                rate={5}
-              />
-              <RatedDoctors
-                name="Tanoesoedibjo"
-                hospital="RS Mandaya"
-                rate={5}
-              />
-              <RatedDoctors name="Ayu Shella" hospital="RS Dewi Sri" rate={5} />
-              <RatedDoctors
-                name="Ariana"
-                hospital="Siloam International"
-                rate={5}
-              />
-              <RatedDoctors
-                name="Anya Ger"
-                hospital="Siloam International"
-                rate={5}
-              />
+              {doctors.map((doctor) => {
+                return (
+                  <RatedDoctors
+                    key={doctor.id}
+                    name={doctor.name}
+                    spesialis={doctor.spesialis}
+                    rate={doctor.rate}
+                    avatar={doctor.avatar}
+                    onPress={() =>
+                      navigation.navigate('ProfileDoctor', {
+                        name: doctor.name,
+                        avatar: doctor.avatar,
+                        spesialis: category,
+                        type: 'uri',
+                      })
+                    }
+                  />
+                );
+              })}
               <Gap width={16} />
             </View>
           </ScrollView>
@@ -97,7 +141,31 @@ const ListDoctors = ({navigation}) => {
         {/* Start CardDoctor Component  */}
         <View style={styles.containerList}>
           <View style={styles.listDoctor}>
-            <ListDoctorScroll />
+            {JSONListDoctor.data.map((doctor) => {
+              return (
+                <CardDoctor
+                  key={doctor.id}
+                  name={doctor.name}
+                  spesialis={category}
+                  avatar={doctor.image}
+                  hospital={doctor.hospital}
+                  onPressMessage={() =>
+                    navigation.navigate('Chat', {
+                      name: doctor.name,
+                      status: 'online',
+                      image: doctor.image,
+                    })
+                  }
+                  onPressDoctor={() =>
+                    navigation.navigate('ProfileDoctor', {
+                      name: doctor.name,
+                      avatar: doctor.image,
+                      spesialis: category,
+                    })
+                  }
+                />
+              );
+            })}
           </View>
           <Gap height={20} />
         </View>

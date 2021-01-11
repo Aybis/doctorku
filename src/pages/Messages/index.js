@@ -18,8 +18,8 @@ import {Gap, Search} from '../../components/atoms';
 import {ChatDoctor} from '../../components/molecules';
 import {colors, fonts} from '../../utils';
 
-const Messages = () => {
-  const [doctors, setDoctor] = useState([
+const Messages = ({navigation}) => {
+  const [doctors] = useState([
     {
       id: 1,
       avatar: DUProfileDoctor,
@@ -56,6 +56,7 @@ const Messages = () => {
                 name={doctor.name}
                 chat={doctor.chat}
                 time={doctor.time}
+                onPress={() => navigation.navigate('Chat')}
               />
             );
           })}

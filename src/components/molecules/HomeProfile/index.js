@@ -1,23 +1,34 @@
-/* eslint-disable no-alert */
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {DUAvatar} from '../../../assets';
-import {colors, fonts} from '../../../utils';
+import {ILPhoto} from '../../../assets';
+import {colors, fonts, getData} from '../../../utils';
 import {Button} from '../../atoms';
 
 const HomeProfile = ({userProfile}) => {
+  const [profile, setprofile] = useState({
+    photo: ILPhoto,
+    fullName: '',
+    email: '',
+  });
+
+  // get data from local storage
+  useEffect(() => {
+    getData('user').then((res) => {
+      const data = res;
+      data.photo = {uri: res.photo};
+      setprofile(data);
+      console.log('im home');
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={userProfile}>
-        <Image style={styles.avatar} source={DUAvatar} />
+        <Image style={styles.avatar} source={profile.photo} />
       </TouchableOpacity>
       <View style={styles.header}>
-        <Text style={styles.name}>Hi, Abdul Muchtar</Text>
-        <Button
-          type="icon-only"
-          icon="notification"
-          onPress={() => alert('Soon .....')}
-        />
+        <Text style={styles.name}>Hi, {profile.fullName}</Text>
+        <Button type="icon-only" icon="notification" />
       </View>
     </View>
   );
@@ -35,6 +46,7 @@ const styles = StyleSheet.create({
   avatar: {
     height: 50,
     width: 50,
+    borderRadius: 10,
   },
   header: {
     marginHorizontal: 10,
@@ -45,5 +57,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontFamily: fonts.primary[700],
+    textTransform: 'capitalize',
   },
 });

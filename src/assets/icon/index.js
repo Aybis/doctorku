@@ -25,6 +25,8 @@ import ICLanguage from './translate_24px_outlined.svg';
 import ICAccount from './account_circle_24px_outlined.svg';
 import ICStar from './star_outline_24px_outlined.svg';
 import ICDescription from './description_24px_outlined.svg';
+import ICVector1 from './Vector_1.svg';
+import ICVector2 from './Vector_2.svg';
 
 export {
   ICToggle,
@@ -54,4 +56,6 @@ export {
   ICAccount,
   ICStar,
   ICDescription,
+  ICVector1,
+  ICVector2,
 };

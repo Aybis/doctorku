@@ -5,5 +5,6 @@ import Link from './Link';
 import TabItem from './TabItem';
 import Rating from './Rating';
 import Search from './Search';
+import Card from './Card';
 
-export {Button, Gap, Input, Link, TabItem, Rating, Search};
+export {Button, Gap, Input, Link, TabItem, Rating, Search, Card};

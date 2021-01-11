@@ -1,23 +1,50 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {ILPhoto} from '../../assets';
 import {Header, List, Profile} from '../../components';
-import {colors} from '../../utils';
+import {colors, getData} from '../../utils';
 
 const UserProfile = ({navigation}) => {
+  const [profile, setprofile] = useState({
+    fullName: '',
+    email: '',
+    photo: ILPhoto,
+  });
+
+  useEffect(() => {
+    getData('user').then((res) => {
+      const data = res;
+      data.photo = {uri: res.photo};
+      setprofile(res);
+    });
+  });
   return (
     <View style={styles.page}>
-      <Header title={'Profile'} onPress={() => navigation.goBack()} />
-      <Profile name="Abdul Muchtar Astria" email="muchtaras.30@gmail.com" />
-      <View style={styles.menu}>
-        <List
-          title="Edit Profile"
-          desc="Last Update Yesterday"
-          icon="account"
-        />
-        <List title="Language" desc="Available 20 Languages" icon="language" />
-        <List title="Give Us Rate" desc="On Google Play store" icon="rate" />
-        <List title="Help Centre" desc="Read our guidlines" icon="help" />
-      </View>
+      <ScrollView>
+        <Header title={'Profile'} onPress={() => navigation.goBack()} />
+        {profile.fullName.length > 0 && (
+          <Profile
+            name={profile.fullName}
+            email={profile.email}
+            photo={profile.photo}
+          />
+        )}
+        <View style={styles.menu}>
+          <List
+            title="Edit Profile"
+            desc="Last Update Yesterday"
+            icon="account"
+            onPress={() => navigation.navigate('EditProfile')}
+          />
+          <List
+            title="Language"
+            desc="Available 20 Languages"
+            icon="language"
+          />
+          <List title="Give Us Rate" desc="On Google Play store" icon="rate" />
+          <List title="Help Centre" desc="Read our guidlines" icon="help" />
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -31,6 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   menu: {
+    marginTop: 20,
     marginBottom: 60,
   },
 });

@@ -3,9 +3,9 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {DUProfileDoctor} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
-const ChatDoctor = ({avatar, name, chat, time}) => {
+const ChatDoctor = ({avatar, name, chat, time, onPress}) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={avatar} style={styles.avatar} />
       <View style={styles.wrapper}>
         <Text style={styles.name}>{name}</Text>

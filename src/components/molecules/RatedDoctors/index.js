@@ -4,12 +4,12 @@ import {DUAvatar} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 import {Rating} from '../../atoms';
 
-const RatedDoctors = ({name, hospital, rate}) => {
+const RatedDoctors = ({name, spesialis, avatar, rate, onPress}) => {
   return (
-    <TouchableOpacity style={styles.container}>
-      <Image style={styles.avatar} source={DUAvatar} />
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <Image style={styles.avatar} source={avatar} />
       <Text style={styles.name}>Dr. {name}</Text>
-      <Text style={styles.hospitals}>{hospital}</Text>
+      <Text style={styles.spesialis}>Spesialis {spesialis}</Text>
       <Rating rating={rate} />
     </TouchableOpacity>
   );
@@ -39,13 +39,14 @@ const styles = StyleSheet.create({
   avatar: {
     height: 85,
     width: 90,
+    borderRadius: 8,
     marginBottom: 8,
   },
   name: {
     fontSize: 12,
     fontFamily: fonts.primary[700],
   },
-  hospitals: {
+  spesialis: {
     fontSize: 12,
     fontFamily: fonts.primary[300],
     color: colors.text.secondary,

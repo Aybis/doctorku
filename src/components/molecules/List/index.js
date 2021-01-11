@@ -9,7 +9,7 @@ import {
 } from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
-const List = ({title, desc, icon}) => {
+const List = ({title, desc, icon, onPress}) => {
   const Icon = () => {
     if (icon === 'account') {
       return <ICAccount />;
@@ -27,9 +27,7 @@ const List = ({title, desc, icon}) => {
     return <ICAccount />;
   };
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => alert('Go to Profile ')}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Icon style={styles.iconMenu} />
 
       <View style={styles.wrapText}>

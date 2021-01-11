@@ -13,7 +13,7 @@ import InputChat from './InputChat';
 import ChatItem from './ChatItem';
 import Profile from './Profile';
 import List from './List';
-
+import Animation from './Animation';
 export {
   Header,
   BottomNavigator,
@@ -30,4 +30,5 @@ export {
   ChatItem,
   Profile,
   List,
+  Animation,
 };

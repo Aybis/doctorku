@@ -7,7 +7,7 @@ const InputChat = () => {
   return (
     <View style={styles.container}>
       <TextInput style={styles.input} placeholder="Type message to Frisca" />
-      <Button type="btn-icon-send" />
+      <Button type="btn-icon-send" onPress={() => alert('soon')} />
     </View>
   );
 };

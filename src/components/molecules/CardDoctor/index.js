@@ -2,26 +2,41 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {DUProfileDoctor, ICSend} from '../../../assets';
 import {colors, fonts} from '../../../utils';
+import {Gap, Rating} from '../../atoms';
 
-const CardDoctor = ({onPressMessage}) => {
+const CardDoctor = ({
+  name,
+  spesialis,
+  hospital,
+  avatar,
+  onPressMessage,
+  onPressDoctor,
+}) => {
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => alert('Go to Profile ')}>
+    <TouchableOpacity style={styles.container} onPress={onPressDoctor}>
       <View style={styles.wrapAvatar}>
-        <Image style={styles.avatar} source={DUProfileDoctor} />
+        <Image
+          style={styles.avatar}
+          source={{
+            uri: avatar,
+          }}
+        />
       </View>
 
       <View style={styles.wrapText}>
         <View>
-          <Text style={styles.name}>Dr Agus Halim </Text>
-          <Text style={styles.spesialis}>Dokter Spesialis Anak </Text>
-          <Text style={styles.hospital}>RS Sadikin Bandung </Text>
+          <Text style={styles.name}>Dr {name} </Text>
+          {/* <Text style={styles.hospital}>{hospital} </Text> */}
+          <Text style={styles.spesialis}>Spesialis {spesialis} </Text>
+          <Gap height={5} />
+          <Rating rating={5} height={12} width={12} />
         </View>
         <View>
-          <TouchableOpacity style={styles.buttonMessage} onPress={onPressMessage}>
+          <TouchableOpacity
+            style={styles.buttonMessage}
+            onPress={onPressMessage}>
             <ICSend />
-            <Text style={styles.textButton}> Message</Text>
+            {/* <Text style={styles.textButton}> Chat</Text> */}
           </TouchableOpacity>
         </View>
       </View>
@@ -52,8 +67,8 @@ const styles = StyleSheet.create({
     padding: 7,
   },
   avatar: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     borderRadius: 5,
   },
   wrapText: {
@@ -66,23 +81,28 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   name: {
-    fontSize: 16,
+    width: 140,
+    fontSize: 14,
     fontFamily: fonts.primary[700],
     textAlign: 'left',
   },
   spesialis: {
-    fontSize: 12,
+    textAlign: 'left',
+    fontSize: 11,
     fontFamily: fonts.primary[300],
   },
   hospital: {
-    fontSize: 14,
-    fontFamily: fonts.primary[600],
+    textAlign: 'left',
+    fontSize: 12,
+    fontFamily: fonts.primary[300],
+    color: colors.text.secondary,
   },
   buttonMessage: {
-    marginHorizontal: 15,
+    padding: 10,
+    right: 10,
     backgroundColor: colors.primary,
-    width: 78,
-    height: 28,
+    // width: 25,
+    height: 30,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',

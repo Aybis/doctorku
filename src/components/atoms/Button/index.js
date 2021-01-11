@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {colors, fonts} from '../../../utils';
 import BtnIconSend from './BtnIconSend';
@@ -11,8 +11,17 @@ const Button = ({type, title, onPress, icon, disable}) => {
   }
 
   if (type === 'btn-icon-send') {
-    return <BtnIconSend disable={disable} />;
+    return <BtnIconSend disable={disable} onPress={onPress} />;
   }
+
+  if (disable) {
+    return (
+      <View style={styles.disabledButton}>
+        <Text style={styles.disabledText}>{title}</Text>
+      </View>
+    );
+  }
+
   return (
     <TouchableOpacity style={styles.container(type)} onPress={onPress}>
       <Text style={styles.text(type)}>{title}</Text>
@@ -33,6 +42,19 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
   }),
+  disabledButton: {
+    paddingVertical: 10,
+    borderRadius: 10,
+    height: 50,
+    justifyContent: 'center',
+    backgroundColor: colors.button.disable.background,
+  },
+  disabledText: {
+    color: colors.button.disable.text,
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: fonts.primary[600],
+  },
   text: (type) => ({
     fontSize: 18,
     textAlign: 'center',
@@ -40,7 +62,7 @@ const styles = StyleSheet.create({
       type === 'secondary'
         ? colors.button.dark.text
         : colors.button.primary.text,
-    fontFamily: fonts.primary[800],
+    fontFamily: fonts.primary[600],
 
     shadowColor: '#000',
     shadowOffset: {

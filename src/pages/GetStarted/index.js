@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     textAlign: 'center',
     color: '#112340',
     fontFamily: fonts.primary[700],
@@ -50,14 +50,11 @@ const styles = StyleSheet.create({
     marginTop: 60,
   },
   text: {
-    marginTop: 60,
-    fontSize: 32,
+    marginVertical: 20,
+    fontSize: 24,
     alignItems: 'center',
     textAlign: 'center',
     color: '#112340',
     fontFamily: fonts.primary[700],
-  },
-  gep: {
-    height: 15,
   },
 });

@@ -1,5 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  DUAvatar,
+  DUProfileAlbert,
+  DUProfileDoctor2,
+  DUProfileDoctor4,
+  DUProfileDoctor5,
+  DUProfileDoctor7,
+  DUProfileDoctor8,
+  JSONCategoryDoctor,
+} from '../../assets';
 import {Gap} from '../../components/atoms';
 import {
   CardCategory,
@@ -9,9 +19,67 @@ import {
   RatedHospitals,
 } from '../../components/molecules';
 import {colors, fonts} from '../../utils';
-import {JSONCategoryDoctor} from '../../assets';
 
 const Home = ({navigation}) => {
+  const [doctors] = useState([
+    {
+      id: 1,
+      avatar: DUAvatar,
+      name: 'Frisca Putri',
+      spesialis: 'Kandungan',
+      rate: 5,
+    },
+    {
+      id: 2,
+      avatar: DUProfileDoctor2,
+      name: 'Ayu Putri',
+      spesialis: 'Anak',
+      rate: 5,
+    },
+    {
+      id: 3,
+      avatar: DUProfileDoctor4,
+      name: 'Agus Halim',
+      spesialis: 'THT',
+      rate: 5,
+    },
+    {
+      id: 4,
+      avatar: DUProfileDoctor5,
+      name: 'Valencia',
+      spesialis: 'Kulit & Kelamin',
+      rate: 5,
+    },
+    {
+      id: 5,
+      avatar: DUProfileAlbert,
+      name: 'Johnson Astiago',
+      spesialis: 'Bedah Tulang',
+      rate: 5,
+    },
+    {
+      id: 6,
+      avatar: DUProfileDoctor7,
+      name: 'Abdul Malik',
+      spesialis: 'Anastesis',
+      rate: 5,
+    },
+    {
+      id: 7,
+      avatar: DUProfileDoctor8,
+      name: 'Anya Ger',
+      spesialis: 'Penyakit Dalam',
+      rate: 5,
+    },
+    {
+      id: 8,
+      avatar: DUProfileAlbert,
+      name: 'Tanoesoedibjo',
+      spesialis: 'Orthopedi',
+      rate: 5,
+    },
+  ]);
+
   return (
     <View style={styles.page}>
       <HomeProfile userProfile={() => navigation.navigate('UserProfile')} />
@@ -31,7 +99,7 @@ const Home = ({navigation}) => {
                       category={item.category}
                       onPress={() =>
                         navigation.navigate('ListDoctors', {
-                          data: item.category,
+                          category: item.category,
                         })
                       }
                     />
@@ -48,46 +116,26 @@ const Home = ({navigation}) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.doctor}>
                 <Gap width={16} />
-                <RatedDoctors
-                  name="Frisca Putri"
-                  hospital="Siloam International"
-                  rate={5}
-                />
-                <RatedDoctors
-                  name="Ayu Putri"
-                  hospital="RS Sadikin Bandung"
-                  rate={5}
-                />
-                <RatedDoctors
-                  name="Rena Grande"
-                  hospital="RS Bayukarta"
-                  rate={5}
-                />
-                <RatedDoctors
-                  name="Valencia"
-                  hospital="RS Jatung Nasional"
-                  rate={5}
-                />
-                <RatedDoctors
-                  name="Tanoesoedibjo"
-                  hospital="RS Mandaya"
-                  rate={5}
-                />
-                <RatedDoctors
-                  name="Ayu Shella"
-                  hospital="RS Dewi Sri"
-                  rate={5}
-                />
-                <RatedDoctors
-                  name="Ariana"
-                  hospital="Siloam International"
-                  rate={5}
-                />
-                <RatedDoctors
-                  name="Anya Ger"
-                  hospital="Siloam International"
-                  rate={5}
-                />
+                {doctors.map((doctor) => {
+                  return (
+                    <RatedDoctors
+                      key={doctor.id}
+                      name={doctor.name}
+                      spesialis={doctor.spesialis}
+                      rate={doctor.rate}
+                      avatar={doctor.avatar}
+                      onPress={(name, avatar) =>
+                        navigation.navigate('ProfileDoctor', {
+                          name: doctor.name,
+                          avatar: doctor.avatar,
+                          spesialis: doctor.spesialis,
+                          type: 'uri',
+                        })
+                      }
+                    />
+                  );
+                })}
+
                 <Gap width={16} />
               </View>
             </ScrollView>

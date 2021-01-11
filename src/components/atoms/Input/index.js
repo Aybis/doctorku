@@ -1,9 +1,9 @@
-import React from 'react';
-import {StyleSheet, Switch, View} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Switch, Text, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {colors, fonts} from '../../../utils';
 
-const Input = ({label, type}) => {
+const Input = ({label, type, value, disable, onChangeText}) => {
   const Toggle = () => {
     if (type === 'password') {
       return (
@@ -16,6 +16,7 @@ const Input = ({label, type}) => {
     }
     return <View />;
   };
+
   const keyboardType = () => {
     if (type === 'email') {
       return 'email-address';
@@ -28,31 +29,57 @@ const Input = ({label, type}) => {
   const [isSwitchEnabled, setSwicth] = React.useState(
     type === 'password' ? true : false,
   );
+
+  const [border, setBorder] = useState(colors.border);
+
+  const onFocusForm = () => {
+    setBorder(colors.tertiary);
+  };
+
+  const onBlurForm = () => {
+    setBorder(colors.border);
+  };
+
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder={label}
-        secureTextEntry={isSwitchEnabled}
-        keyboardType={keyboardType()}
-      />
-      <Toggle />
+    <View>
+      <Text style={styles.label}>{label}</Text>
+
+      <View style={styles.container(border, disable)}>
+        <TextInput
+          style={styles.input}
+          onFocus={onFocusForm}
+          onBlur={onBlurForm}
+          placeholder={label}
+          value={value}
+          onChangeText={onChangeText}
+          editable={!disable}
+          secureTextEntry={isSwitchEnabled}
+          keyboardType={keyboardType()}
+        />
+
+        <Toggle />
+      </View>
     </View>
   );
 };
 
 export default Input;
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 15,
+  container: (border, disable) => ({
+    marginTop: 10,
     flexDirection: 'row',
     borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: colors.white,
-    backgroundColor: colors.inputText.default,
-    opacity: 0.8,
-    fontFamily: fonts.primary[300],
+    borderWidth: 1,
+    borderColor: border,
+    backgroundColor: disable ? colors.button.disable.background : colors.white,
+    // opacity: disable ? 0.7 : 1,
+    fontFamily: fonts.primary[400],
     alignItems: 'center',
+  }),
+  label: {
+    fontSize: 16,
+    fontFamily: fonts.primary.normal,
+    color: colors.text.secondary,
   },
   input: {
     flex: 1,

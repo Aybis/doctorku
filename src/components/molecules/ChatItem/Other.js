@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {DUProfileDoctor} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
-const Other = () => {
+const Other = ({avatar}) => {
+  // const avatar  = String;
   return (
     <View style={styles.container}>
-      <Image source={DUProfileDoctor} style={styles.avatar} />
+      <Image source={avatar == String ? {uri: avatar} : avatar } style={styles.avatar} />
+      {/* <ImageFrom /> */}
       <View>
         <View style={styles.chatContent}>
           <Text style={styles.chat}>
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 30,
     height: 30,
-    borderRadius: 30/2,
+    borderRadius: 30 / 2,
     marginRight: 12,
   },
   chatContent: {
