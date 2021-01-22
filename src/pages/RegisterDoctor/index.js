@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
-import {ILLogin} from '../../assets';
-import {Button, Gap, Header, Input, Link} from '../../components';
-import {Firebase} from '../../config';
+import { useDispatch } from 'react-redux';
+import { ILLogin } from '../../assets';
+import { Button, Dropdown, Gap, Header, Input, Link } from '../../components';
+import { Firebase } from '../../config';
 import {
   colors,
   fonts,
@@ -19,15 +19,30 @@ import {
   useForm,
 } from '../../utils';
 
-const Register = ({navigation}) => {
+const Register = ({ navigation }) => {
   const [form, setForm] = useForm({
     fullName: '',
     phone: '',
     email: '',
     password: '',
-    type: 'user',
+    category: '',
+    sex: '',
+    about: '',
+    rate: '',
+    hospital: '',
+    type: 'doctor',
   });
   const dispatch = useDispatch();
+
+  const onChangeSex = (val) => {
+    setForm('sex', val);
+  };
+  const onChangeCategory = (val) => {
+    setForm('category', val);
+  };
+  const onChangeHospital = (val) => {
+    setForm('hospital', val);
+  };
 
   const onContinue = () => {
     dispatch({
@@ -35,40 +50,37 @@ const Register = ({navigation}) => {
       value: true,
     });
 
+    // Create username and password
     Firebase.auth()
       .createUserWithEmailAndPassword(form.email, form.password)
       .then((success) => {
-        // set false for turn off loading screen
-        dispatch({
-          type: 'SET_LOADING',
-          value: false,
-        });
-
         //declare variable for collect data when store to database
         const data = {
           fullName: form.fullName,
           phone: form.phone,
           email: form.email,
+          category: form.category,
+          sex: form.sex,
+          rate: form.rate,
+          about: form.about,
+          hospital: form.hospital,
           type: form.type,
           uid: success.user.uid,
         };
 
+        // set false for turn off loading screen
+        dispatch({
+          type: 'SET_LOADING',
+          value: false,
+        });
+        // insert data to database
+        Firebase.database().ref(`doctors/${success.user.uid}/`).set(data);
+        // storeData to localStorage with key user and value form
+        storeData('user', data);
+        // reset every form
+        setForm('reset');
+
         setTimeout(() => {
-          // function store data to database use firebase
-          Firebase.database().ref(`users/${success.user.uid}/`).set(data);
-
-          // getData from localStorage with key user
-          // getData('user').then((res) => {
-          //   console.log('data: ', res);
-          // });
-
-          // storeData to localStorage with key user and value form
-          storeData('user', data);
-
-          // function reset every form input after success register
-          setForm('reset');
-
-          // set flash message on top when register success
           showSuccess(
             'Register Success',
             `Your account with email "${success.user.email}" has successfully registered`,
@@ -95,7 +107,7 @@ const Register = ({navigation}) => {
         </View>
 
         <View style={styles.content}>
-          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.title}>Create Account Doctor</Text>
 
           <Input
             label="Full name"
@@ -112,12 +124,61 @@ const Register = ({navigation}) => {
           />
           <Gap height={10} />
 
+          <Dropdown
+            label="Dokter Spesialis"
+            type="dokter"
+            selectedValue={form.category}
+            onChange={(itemValue, itemIndex) => onChangeCategory(itemValue)}
+            listItem={['kandungan', 'anak', 'jantung', 'bedah', 'umum']}
+          />
+          <Gap height={10} />
+
+          <Dropdown
+            label="Rumah Sakit"
+            type="RS"
+            selectedValue={form.hospital}
+            onChange={(itemValue, itemIndex) => onChangeHospital(itemValue)}
+            listItem={[
+              'Siloam Internasional',
+              'Dewi Sri',
+              'Bayukarta',
+              'Mitra Keluarga',
+              'Mandaya',
+            ]}
+          />
+          <Gap height={10} />
+
           <Input
             label="Phone"
             type="number"
             value={form.phone}
             onChangeText={(value) => setForm('phone', value)}
           />
+          <Gap height={10} />
+
+          <Dropdown
+            label="Jenis Kelamin"
+            selectedValue={form.sex}
+            onChange={(itemValue, itemIndex) => onChangeSex(itemValue)}
+            listItem={['pria', 'wanita']}
+          />
+          <Gap height={10} />
+
+          <Input
+            label="Rating"
+            type="number"
+            value={form.rate}
+            onChangeText={(value) => setForm('rate', value)}
+          />
+          <Gap height={10} />
+
+          <Input
+            label="About Me"
+            value={form.about}
+            multiline
+            onChangeText={(value) => setForm('about', value)}
+          />
+
           <Gap height={10} />
 
           <Input
@@ -130,10 +191,6 @@ const Register = ({navigation}) => {
           <Gap height={22} />
           <Button title="Sign Up" onPress={onContinue} />
           <Gap height={10} />
-          <TouchableOpacity
-            onPress={() => navigation.replace('RegisterDoctor')}>
-            <Link label="Register as Doctor ?" align="center" size={16} />
-          </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.replace('Login')}>
             <Link
               label="I'm already member. Sign In"
@@ -173,5 +230,24 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingHorizontal: 30,
     flex: 1,
+  },
+  container: {
+    marginTop: 10,
+    flexDirection: 'row',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    fontFamily: fonts.primary[400],
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 16,
+    fontFamily: fonts.primary.normal,
+    color: colors.text.secondary,
+  },
+  dropdown: {
+    flex: 1,
+    fontSize: 20,
+    paddingHorizontal: 20,
   },
 });

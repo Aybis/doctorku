@@ -2,56 +2,56 @@
     "data": [
         {
             "id": 1,
-            "name" : "Chris Hemswort",
-            "spesialis": "Pediatrician",
+            "fullName" : "Chris Hemswort",
+            "category": "Pediatrician",
             "hospital": "RS Sadikin",
             "image": "https://www.biography.com/.image/t_share/MTU0ODUwMjQ0NjIwNzI0MDAx/chris-hemsworth-poses-during-a-photo-call-for-thor-ragnarok-on-october-15-2017-in-sydney-australia-photo-by-mark-metcalfe_getty-images-for-disney-square.jpg"
         },{
             "id": 2, 
-            "name": "Chris Evans",
-            "spesialis": "Pediatrician",
+            "fullName": "Chris Evans",
+            "category": "Pediatrician",
             "hospital": "RS Sadikin",
             "image": "https://www.biography.com/.image/t_share/MTU1MTM0NzA2NzQ3MTg4NDQw/chris-evans-arrives-at-the-los-angeles-premiere-of-captain-america-the-winter-soldier-held-at-the-el-capitan-theatre-on-march-13-2014-in-hollywood-california-photo-by-michael-tran_filmmagicjpg-square.jpg"
         },{
             "id": 4, 
-            "name": "Robert Downey Jr",
-            "spesialis": "Pediatrician",
+            "fullName": "Robert Downey Jr",
+            "category": "Pediatrician",
             "hospital": "RS Mitra Keluarga",
             "image": "https://static.toiimg.com/photo/msid-75805310/75805310.jpg?135092"
         },{
             "id": 5, 
-            "name": "Benedict Cumberbatch",
-            "spesialis": "Pediatrician",
+            "fullName": "Benedict Cumberbatch",
+            "category": "Pediatrician",
             "hospital": "RS Umum",
             "image": "https://cdn.britannica.com/05/187505-050-6BB9F835/Benedict-Cumberbatch-2014.jpg"
         },{
             "id": 6, 
-            "name": "Tom Holand",
-            "spesialis": "Pediatrician",
+            "fullName": "Tom Holand",
+            "category": "Pediatrician",
             "hospital": "RS Bayukarta",
             "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8L5vLI5SSs0mh7MdFYaTmSaHfocyZOB93tw&usqp=CAU"
         },{
             "id": 7, 
-            "name": "Sebastian Stan",
-            "spesialis": "Pediatrician",
+            "fullName": "Sebastian Stan",
+            "category": "Pediatrician",
             "hospital": "RS Dewi Sri",
             "image": "https://i.pinimg.com/originals/1d/e2/ae/1de2ae622f80a05da093b92526eada77.jpg"
         },{
             "id": 8, 
-            "name": "Tom Hiddleston",
-            "spesialis": "Pediatrician",
+            "fullName": "Tom Hiddleston",
+            "category": "Pediatrician",
             "hospital": "RS Lira Medika",
             "image": "https://data.whicdn.com/images/329292674/original.jpg"
         },{
             "id": 9, 
-            "name": "Mark Rufallo",
-            "spesialis": "Pediatrician",
+            "fullName": "Mark Rufallo",
+            "category": "Pediatrician",
             "hospital": "RS Mayapada",
             "image": "https://1.bp.blogspot.com/-TYsRTwiEXzI/WBvn-_E9WcI/AAAAAAAAGPU/4V8VkuHgQT8ykYmF4pwmNS5jSAzpuU-PwCLcB/s1600/Mark_Ruffalo_June_2014.jpg"
         },{
             "id": 10, 
-            "name": "Samuel L. Jackson",
-            "spesialis": "Pediatrician",
+            "fullName": "Samuel L. Jackson",
+            "category": "Pediatrician",
             "hospital": "RS Mitra Anak",
             "image": "https://pyxis.nymag.com/v1/imgs/857/afa/554806cfcedca647757e40140d5c6d05d8-20-samuel-l-jackson-master-class-2.rsquare.w700.jpg"
         }

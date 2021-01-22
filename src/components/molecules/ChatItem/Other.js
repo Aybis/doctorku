@@ -1,22 +1,16 @@
-import React, { useState } from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {DUProfileDoctor} from '../../../assets';
-import {colors, fonts} from '../../../utils';
+import React from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { colors, fonts } from '../../../utils';
 
-const Other = ({avatar}) => {
-  // const avatar  = String;
+const Other = ({ avatar, text, date }) => {
   return (
     <View style={styles.container}>
-      <Image source={avatar == String ? {uri: avatar} : avatar } style={styles.avatar} />
-      {/* <ImageFrom /> */}
+      <Image source={avatar} style={styles.avatar} />
       <View>
         <View style={styles.chatContent}>
-          <Text style={styles.chat}>
-            Oh tentu saja tidak, karena kulit jeruk itu mengandung sari dan
-            vitamin yang bagus untuk tubuh jadi bagus untuk tubuh :)
-          </Text>
+          <Text style={styles.chat}>{text}</Text>
         </View>
-        <Text style={styles.date}>9.20 AM</Text>
+        <Text style={styles.date}>{date}</Text>
       </View>
     </View>
   );
@@ -29,7 +23,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 20,
     flexDirection: 'row',
-    paddingLeft: 16,
+    paddingLeft: 12,
   },
   avatar: {
     width: 30,
@@ -38,7 +32,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   chatContent: {
-    maxWidth: '80%',
+    maxWidth: '90%',
     borderRadius: 8,
     padding: 12,
     paddingRight: 18,

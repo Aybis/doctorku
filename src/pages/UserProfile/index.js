@@ -1,23 +1,57 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {ILPhoto} from '../../assets';
-import {Header, List, Profile} from '../../components';
-import {colors, getData} from '../../utils';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { ILPhoto } from '../../assets';
+import { Header, List, Profile } from '../../components';
+import { Firebase } from '../../config';
+import {
+  colors,
+  getData,
+  showError,
+  showSuccess,
+  storeData,
+} from '../../utils';
 
-const UserProfile = ({navigation}) => {
+const UserProfile = ({ navigation }) => {
   const [profile, setprofile] = useState({
+    photo: ILPhoto,
     fullName: '',
     email: '',
-    photo: ILPhoto,
+    type: '',
   });
 
+  // get data from local storage
   useEffect(() => {
     getData('user').then((res) => {
       const data = res;
-      data.photo = {uri: res.photo};
-      setprofile(res);
+      data.photo = { uri: res.photo };
+      setprofile(data);
     });
-  });
+  }, [profile.uid]);
+
+  const signOut = () => {
+    Firebase.auth()
+      .signOut()
+      .then((res) => {
+        setTimeout(() => {
+          storeData('user', null);
+          showSuccess('Sign Out Success');
+        }, 1000);
+
+        navigation.replace('GetStarted');
+      })
+      .catch((err) => {
+        showError(err.code, err.message);
+      });
+  };
+
+  const RedirectEditProfile = (type) => {
+    if (type === 'doctor') {
+      navigation.navigate('EditProfileDoctor');
+    }
+    if (type === 'user') {
+      navigation.navigate('EditProfile');
+    }
+  };
   return (
     <View style={styles.page}>
       <ScrollView>
@@ -34,7 +68,7 @@ const UserProfile = ({navigation}) => {
             title="Edit Profile"
             desc="Last Update Yesterday"
             icon="account"
-            onPress={() => navigation.navigate('EditProfile')}
+            onPress={() => RedirectEditProfile(profile.type)}
           />
           <List
             title="Language"
@@ -42,7 +76,12 @@ const UserProfile = ({navigation}) => {
             icon="language"
           />
           <List title="Give Us Rate" desc="On Google Play store" icon="rate" />
-          <List title="Help Centre" desc="Read our guidlines" icon="help" />
+          <List
+            title="Sign Out"
+            desc="Read our guidlines"
+            icon="help"
+            onPress={signOut}
+          />
         </View>
       </ScrollView>
     </View>

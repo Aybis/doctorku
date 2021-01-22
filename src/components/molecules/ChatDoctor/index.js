@@ -1,9 +1,17 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {DUProfileDoctor} from '../../../assets';
-import {colors, fonts} from '../../../utils';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { colors, fonts, getChatTime, setDateChat } from '../../../utils';
 
-const ChatDoctor = ({avatar, name, chat, time, onPress}) => {
+const ChatDoctor = ({ avatar, name, chat, time, onPress }) => {
+  const getTime = new Date(time);
+  const today = new Date();
+  let date;
+
+  if (setDateChat(getTime) === setDateChat(today)) {
+    date = getChatTime(getTime);
+  } else {
+    date = setDateChat(getTime);
+  }
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={avatar} style={styles.avatar} />
@@ -11,7 +19,7 @@ const ChatDoctor = ({avatar, name, chat, time, onPress}) => {
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.chat}>{chat}</Text>
       </View>
-      <Text style={styles.time}>{time}</Text>
+      <Text style={styles.time}>{date}</Text>
     </TouchableOpacity>
   );
 };
@@ -20,7 +28,6 @@ export default ChatDoctor;
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: colors.dummy,
     borderRadius: 10,
     marginVertical: 10,
     flexDirection: 'row',

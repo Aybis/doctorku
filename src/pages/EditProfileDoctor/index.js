@@ -4,22 +4,11 @@ import ImagePicker from 'react-native-image-picker';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 import {ILPhoto} from '../../assets';
-import {Button, Gap, Header, Input, Profile} from '../../components';
+import {Button, Dropdown, Gap, Header, Input, Profile} from '../../components';
 import {Firebase} from '../../config';
 import {colors, getData, showError, showSuccess, storeData} from '../../utils';
 
 const EditProfile = ({navigation}) => {
-  const [profile, setprofile] = useState({
-    fullName: '',
-    email: '',
-    photo: ILPhoto,
-    phone: '',
-  });
-  const dispatch = useDispatch();
-  const [photo, setphoto] = useState(ILPhoto);
-  const [photoForDB, setphotoForDB] = useState('');
-  const [password, setpassword] = useState('');
-
   useEffect(() => {
     getData('user').then((res) => {
       const data = res;
@@ -28,12 +17,30 @@ const EditProfile = ({navigation}) => {
     });
   }, []);
 
+  const [profile, setprofile] = useState({
+    fullName: '',
+    email: '',
+    photo: ILPhoto,
+    phone: '',
+    category: '',
+    sex: '',
+    rate: '',
+    hospital: '',
+  });
+
+  const dispatch = useDispatch();
+
+  const [photo, setphoto] = useState(ILPhoto);
+
+  const [photoForDB, setphotoForDB] = useState('');
+
+  const [password, setpassword] = useState('');
+
   const onPressUpdate = () => {
     if (password.length > 0) {
       if (password.length < 6) {
         showError('Error', 'Password must least by 6 charachter');
       } else {
-        //update password and profile
         updateProfileData();
         updatePasswordProfile();
       }
@@ -73,7 +80,7 @@ const EditProfile = ({navigation}) => {
     const data = profile;
     data.photo = photoForDB === '' ? photo.uri : photoForDB;
     Firebase.database()
-      .ref(`users/${profile.uid}/`)
+      .ref(`doctors/${profile.uid}/`)
       .update(data, (error) => {
         if (error) {
           // The write failed...
@@ -83,16 +90,19 @@ const EditProfile = ({navigation}) => {
           });
           showError('Update Profle error');
         } else {
+          // Set data to null in local storage
+          storeData('user', null);
+          // insert data user to local storage
+          storeData('user', data);
+
           dispatch({
             type: 'SET_LOADING',
             value: false,
           });
-          // Data saved successfully!
-          storeData('user', null);
-          storeData('user', data);
           setTimeout(() => {
             showSuccess('Success', 'Update Profile was sucessfully updated');
-          }, 1000);
+          }, 2000);
+
           navigation.replace('MainApp');
         }
       });
@@ -105,10 +115,28 @@ const EditProfile = ({navigation}) => {
     });
   };
 
-  const getImage = () => {
-    // launchCamera for activate camera
-    //launchImageLibrary for get image from library
+  const onChangeSex = (key, val) => {
+    setprofile({
+      ...profile,
+      [key]: val,
+    });
+  };
 
+  const onChangeCategory = (key, val) => {
+    setprofile({
+      ...profile,
+      [key]: val,
+    });
+  };
+
+  const onChangeHospital = (key, val) => {
+    setprofile({
+      ...profile,
+      [key]: val,
+    });
+  };
+
+  const getImage = () => {
     ImagePicker.launchImageLibrary({quality: 0.7}, (response) => {
       if (response.didCancel) {
         showError('oops, kok ga jadi milih photonya ?');
@@ -140,6 +168,50 @@ const EditProfile = ({navigation}) => {
 
           <Input label="Email" value={profile.email} disable />
           <Gap height={24} />
+
+          <Dropdown
+            label="Dokter Spesialis"
+            type="dokter"
+            selectedValue={profile.category}
+            onChange={(itemValue, itemIndex) =>
+              onChangeCategory('category', itemValue)
+            }
+            listItem={['kandungan', 'anak', 'jantung', 'bedah', 'umum']}
+          />
+          <Gap height={10} />
+
+          <Dropdown
+            label="Rumah Sakit"
+            type="RS"
+            selectedValue={profile.hospital}
+            onChange={(itemValue, itemIndex) =>
+              onChangeHospital('hospital', itemValue)
+            }
+            listItem={[
+              'Siloam Internasional',
+              'Dewi Sri',
+              'Bayukarta',
+              'Mitra Keluarga',
+              'Mandaya',
+            ]}
+          />
+          <Gap height={10} />
+
+          <Dropdown
+            label="Jenis Kelamin"
+            selectedValue={profile.sex}
+            onChange={(itemValue, itemIndex) => onChangeSex('sex', itemValue)}
+            listItem={['pria', 'wanita']}
+          />
+          <Gap height={10} />
+
+          <Input
+            label="Rating"
+            type="number"
+            value={profile.rate}
+            onChangeText={(value) => changeText('rate', value)}
+          />
+          <Gap height={10} />
 
           <Input
             label="Phone"

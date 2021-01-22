@@ -1,17 +1,23 @@
-import React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Gap, Search} from '../../components/atoms';
-import {CardHospitals, RatedHospitals} from '../../components/molecules';
-import {colors, fonts} from '../../utils';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Gap, Search } from '../../components/atoms';
+import { CardHospitals, RatedHospitals } from '../../components/molecules';
+import { colors, fonts, showError } from '../../utils';
 
 const Hospitals = () => {
-  var list = [];
-  const ListHospitals = () => {
-    for (let index = 0; index < 10; index++) {
-      list.push(<CardHospitals key={index} />);
-    }
-    return list;
-  };
+  const [hospitals, sethospitals] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('https://dekontaminasi.com/api/id/covid19/hospitals')
+      .then((response) => {
+        sethospitals(response.data);
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  }, []);
   return (
     <View style={styles.page}>
       <Text style={styles.header}>Hospitals</Text>
@@ -52,8 +58,19 @@ const Hospitals = () => {
           </View>
 
           <Text style={styles.textHospitals}>List Hospitals</Text>
+
           <View style={styles.list}>
-            <ListHospitals />
+            {hospitals.slice(0, 20).map((item, index) => {
+              return (
+                <CardHospitals
+                  key={index}
+                  name={item.name}
+                  address={item.address}
+                  phone={item.phone}
+                  province={item.province}
+                />
+              );
+            })}
           </View>
         </View>
         <Gap height={20} />

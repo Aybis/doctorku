@@ -1,98 +1,138 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {showMessage} from 'react-native-flash-message';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {ILLogin} from '../../assets';
-import {Animation, Button, Gap, Input, Link} from '../../components';
-import {Firebase} from '../../config';
-import {colors, fonts, storeData, useForm} from '../../utils';
+import React from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useDispatch } from 'react-redux';
+import { ILLogin } from '../../assets';
+import { Button, Dropdown, Gap, Input, Link } from '../../components';
+import { Firebase } from '../../config';
+import {
+  colors,
+  fonts,
+  getData,
+  showError,
+  showSuccess,
+  storeData,
+  useForm,
+} from '../../utils';
 
-const Login = ({navigation}) => {
-  const [form, setform] = useForm({email: '', password: ''});
-  const [loading, setloading] = useState(false);
+const Login = ({ navigation }) => {
+  const [form, setform] = useForm({ email: '', password: '', as: 'user' });
+  const dispatch = useDispatch();
+  const onChangeAs = (val) => {
+    setform('as', val);
+  };
 
   const LoginApp = () => {
-    setloading(true);
+    dispatch({
+      type: 'SET_LOADING',
+      value: true,
+    });
+
     Firebase.auth()
       .signInWithEmailAndPassword(form.email, form.password)
       .then((res) => {
-        setloading(false);
-        console.log('success : ', res);
-
-        Firebase.database()
-          .ref(`users/${res.user.uid}/`)
-          .once('value')
-          .then((resUser) => {
-            console.log('resUser: ', resUser.val());
-            if (resUser.val()) {
-              storeData('user', resUser.val());
-            }
-          });
-        showMessage({
-          message: 'Wow, It Workss !!!',
-          description: `Hello ${res.user.email}, Welcome Back!`,
-          type: 'success',
-          icon: 'success',
-          floating: true,
+        dispatch({
+          type: 'SET_LOADING',
+          value: false,
         });
+        if (form.as === 'doctor') {
+          loginDoctor(res);
+        }
 
-        navigation.replace('MainApp');
+        if (form.as === 'user') {
+          loginUser(res);
+        }
       })
       .catch((err) => {
-        setloading(false);
-        showMessage({
-          message: err.code,
-          description: err.message,
-          type: 'danger',
-          icon: 'danger',
-          floating: true,
+        dispatch({
+          type: 'SET_LOADING',
+          value: false,
         });
+        showError(err.message, err.desc);
+      });
+  };
+
+  const loginDoctor = (res) => {
+    Firebase.database()
+      .ref(`doctors/${res.user.uid}/`)
+      .once('value')
+      .then((resUser) => {
+        if (resUser.val()) {
+          storeData('user', resUser.val());
+
+          // show message success
+          showSuccess(
+            'Wow, It Workss !!!',
+            `Hello ${res.user.email}, Welcome Back!`,
+          );
+          navigation.replace('MainApp');
+        }
+      });
+  };
+
+  const loginUser = (res) => {
+    Firebase.database()
+      .ref(`users/${res.user.uid}/`)
+      .once('value')
+      .then((resDB) => {
+        if (resDB.val()) {
+          showSuccess(
+            'Wow, It Workss !!!',
+            `Hello ${res.user.fullName}, Welcome Back!`,
+          );
+          storeData('user', resDB.val());
+          navigation.replace('MainApp');
+        }
       });
   };
 
   return (
-    <>
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.container}>
-        <View style={styles.page}>
-          <View style={styles.logo}>
-            <ILLogin />
-            <Text style={styles.textHeader}>Let's sign you in</Text>
-            <Text style={styles.text}>Welcome back.</Text>
-            <Text style={styles.text}>You've been missed!</Text>
-            <Gap height={20} />
-          </View>
-
-          <View>
-            <Input
-              label="Email"
-              type="email"
-              value={form.email}
-              onChangeText={(value) => setform('email', value)}
-            />
-            <Gap height={10} />
-            <Input
-              label="Password"
-              type="password"
-              value={form.password}
-              onChangeText={(value) => setform('password', value)}
-            />
-            <Link label="Forgot Password" align="right" size={12} />
-            <Gap height={10} />
-          </View>
-          <Button title="Sign In" type="primary" onPress={LoginApp} />
-          <TouchableOpacity onPress={() => navigation.replace('Register')}>
-            <Link
-              label="Don't have account? Register"
-              align="center"
-              size={16}
-            />
-          </TouchableOpacity>
+    <View style={styles.page}>
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+        <View style={styles.logo}>
+          <ILLogin />
+          <Text style={styles.textHeader}>Let's sign you in</Text>
+          <Text style={styles.text}>Welcome back.</Text>
+          <Text style={styles.text}>You've been missed!</Text>
+          <Gap height={20} />
         </View>
-      </KeyboardAwareScrollView>
-      {loading && <Animation />}
-    </>
+
+        <View>
+          <Input
+            label="Email"
+            type="email"
+            value={form.email}
+            onChangeText={(value) => setform('email', value)}
+          />
+          <Gap height={10} />
+          <Input
+            label="Password"
+            type="password"
+            value={form.password}
+            onChangeText={(value) => setform('password', value)}
+          />
+          <Gap height={10} />
+          <Dropdown
+            label="Login As"
+            selectedValue={form.as}
+            onChange={(itemValue, itemIndex) => onChangeAs(itemValue)}
+            listItem={['user', 'doctor']}
+          />
+          <Link label="Forgot Password" align="right" size={12} />
+          <Gap height={10} />
+        </View>
+        <Button title="Sign In" type="primary" onPress={LoginApp} />
+        <TouchableOpacity onPress={() => navigation.replace('Register')}>
+          <Link label="Don't have account? Register" align="center" size={16} />
+        </TouchableOpacity>
+        <Gap height={20} />
+      </ScrollView>
+    </View>
   );
 };
 
@@ -101,7 +141,7 @@ export default Login;
 const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.white,
-    padding: 40,
+    paddingHorizontal: 40,
     flex: 1,
     justifyContent: 'space-between',
   },

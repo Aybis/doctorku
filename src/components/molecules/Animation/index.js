@@ -1,11 +1,11 @@
 import React from 'react';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts } from '../../../utils';
 
 const Animation = () => {
   return (
     <View style={styles.container}>
-        <ActivityIndicator size="large" color={colors.primary} />
+      <ActivityIndicator size="large" color={colors.primary} />
       <Text style={styles.text}>Loading ...</Text>
     </View>
   );
@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   text: {
-      color: colors.primary,
-      fontFamily: fonts.primary[600],
-      fontSize: 20,
-      marginTop: 20,
-  }
+    color: colors.primary,
+    fontFamily: fonts.primary[600],
+    fontSize: 20,
+    marginTop: 20,
+  },
 });

@@ -1,16 +1,8 @@
-import React, {useState} from 'react';
-import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {
-  DUAvatar,
-  DUProfileAlbert,
-  DUProfileDoctor2,
-  DUProfileDoctor4,
-  DUProfileDoctor5,
-  DUProfileDoctor7,
-  DUProfileDoctor8,
-  JSONCategoryDoctor,
-} from '../../assets';
-import {Gap} from '../../components/atoms';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import axios from 'react-native-axios';
+import { ILPhoto } from '../../assets';
+import { Gap } from '../../components/atoms';
 import {
   CardCategory,
   CardNews,
@@ -18,208 +10,206 @@ import {
   RatedDoctors,
   RatedHospitals,
 } from '../../components/molecules';
-import {colors, fonts} from '../../utils';
+import { Firebase } from '../../config';
+import { colors, fonts, getData, showError } from '../../utils';
 
-const Home = ({navigation}) => {
-  const [doctors] = useState([
-    {
-      id: 1,
-      avatar: DUAvatar,
-      name: 'Frisca Putri',
-      spesialis: 'Kandungan',
-      rate: 5,
-    },
-    {
-      id: 2,
-      avatar: DUProfileDoctor2,
-      name: 'Ayu Putri',
-      spesialis: 'Anak',
-      rate: 5,
-    },
-    {
-      id: 3,
-      avatar: DUProfileDoctor4,
-      name: 'Agus Halim',
-      spesialis: 'THT',
-      rate: 5,
-    },
-    {
-      id: 4,
-      avatar: DUProfileDoctor5,
-      name: 'Valencia',
-      spesialis: 'Kulit & Kelamin',
-      rate: 5,
-    },
-    {
-      id: 5,
-      avatar: DUProfileAlbert,
-      name: 'Johnson Astiago',
-      spesialis: 'Bedah Tulang',
-      rate: 5,
-    },
-    {
-      id: 6,
-      avatar: DUProfileDoctor7,
-      name: 'Abdul Malik',
-      spesialis: 'Anastesis',
-      rate: 5,
-    },
-    {
-      id: 7,
-      avatar: DUProfileDoctor8,
-      name: 'Anya Ger',
-      spesialis: 'Penyakit Dalam',
-      rate: 5,
-    },
-    {
-      id: 8,
-      avatar: DUProfileAlbert,
-      name: 'Tanoesoedibjo',
-      spesialis: 'Orthopedi',
-      rate: 5,
-    },
-  ]);
+const Home = ({ navigation }) => {
+  const [news, setnews] = useState([]);
+  const [categoryDoctor, setcategoryDoctor] = useState([]);
+  const [rateDoctor, setrateDoctor] = useState([]);
+  const [profile, setprofile] = useState({
+    photo: ILPhoto,
+    fullName: '',
+    email: '',
+  });
+
+  useEffect(() => {
+    getCategoryDoctor();
+    getRatedDoctor();
+    getDataNews();
+    navigation.addListener('focus', () => {
+      getUserData();
+    });
+  }, [navigation]);
+
+  const getDataNews = () => {
+    axios
+      .get(
+        'http://newsapi.org/v2/top-headlines?country=id&apiKey=f3cdeefc8c064a5f81cb14bddae26292',
+      )
+      .then((response) => {
+        if (response.data) {
+          const filterData = response.data.articles.filter((el) => el !== null);
+          setnews(filterData);
+        }
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
+
+  const getCategoryDoctor = () => {
+    Firebase.database()
+      .ref('category_doctor/')
+      .once('value')
+      .then((res) => {
+        if (res.val()) {
+          const data = res.val();
+          const filterData = data.filter((el) => el !== null);
+          setcategoryDoctor(filterData);
+        }
+      })
+      .catch((err) => {
+        showError(err.message, err.desc);
+      });
+  };
+
+  const getRatedDoctor = () => {
+    Firebase.database()
+      .ref('doctors/')
+      .orderByChild('rate')
+      .limitToLast(5)
+      .once('value')
+      .then((res) => {
+        if (res.val()) {
+          const oldData = res.val();
+          const data = [];
+          Object.keys(oldData).map((key) => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+          setrateDoctor(data);
+        }
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
+
+  const getUserData = () => {
+    getData('user').then((res) => {
+      const data = res;
+      data.photo = res?.photo?.length > 1 ? { uri: res.photo } : ILPhoto;
+      setprofile(res);
+    });
+  };
+
+  const checkIfNotDoctor = () => {
+    return (
+      <>
+        {/* Category Doctor  */}
+        <View style={styles.horizontalWrapper}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.cardCategory}>
+              <Gap width={16} />
+
+              {categoryDoctor.map((item) => {
+                return (
+                  <CardCategory
+                    key={`category-${item.id}`}
+                    category={item.category}
+                    onPress={() =>
+                      navigation.navigate('ListDoctors', {
+                        category: item.category,
+                      })
+                    }
+                  />
+                );
+              })}
+
+              <Gap width={16} />
+            </View>
+          </ScrollView>
+        </View>
+
+        {/* Top Rated Doctor  */}
+        <Text style={styles.textDoctor}>Top Rated Doctors</Text>
+        <View style={styles.horizontalWrapper}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.doctor}>
+              <Gap width={16} />
+              {rateDoctor.map((doctor) => {
+                return (
+                  <RatedDoctors
+                    key={`doctor-${doctor.id}`}
+                    name={doctor.data.fullName}
+                    spesialis={doctor.data.category}
+                    rate={doctor.data.rate}
+                    avatar={{ uri: doctor.data.photo }}
+                    onPress={() => navigation.navigate('ProfileDoctor', doctor)}
+                  />
+                );
+              })}
+
+              <Gap width={16} />
+            </View>
+          </ScrollView>
+        </View>
+
+        {/* Top Rated Hospital */}
+
+        <Text style={styles.textHospitals}>Top Rated Hospitals</Text>
+        <View style={styles.horizontalWrapper}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.cardHospitals}>
+              <Gap width={16} />
+              <RatedHospitals
+                name="Siloam Internasional Karawaci"
+                address="Jl"
+                rating={5}
+              />
+              <RatedHospitals
+                name="RS Sadikin Bandung"
+                address="Jl"
+                rating={5}
+              />
+              <RatedHospitals
+                name="RS Siloam Karawaci"
+                address="Jl"
+                rating={5}
+              />
+              <RatedHospitals name="RS Dewi Sri" address="Jl" rating={5} />
+              <RatedHospitals name="RS Bayukarta" address="Jl" rating={5} />
+              <RatedHospitals
+                name="RS Mitra Keluarga"
+                address="Jl"
+                rating={5}
+              />
+            </View>
+          </ScrollView>
+        </View>
+      </>
+    );
+  };
 
   return (
     <View style={styles.page}>
-      <HomeProfile userProfile={() => navigation.navigate('UserProfile')} />
+      <HomeProfile
+        onPress={() => navigation.navigate('UserProfile')}
+        user={profile}
+      />
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Text style={styles.title}>
             Mau konsultasi dengan siapa hari ini ?
           </Text>
-          <View style={styles.horizontalWrapper}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={styles.cardCategory}>
-                <Gap width={16} />
-                {JSONCategoryDoctor.data.map((item) => {
-                  return (
-                    <CardCategory
-                      key={item.id}
-                      category={item.category}
-                      onPress={() =>
-                        navigation.navigate('ListDoctors', {
-                          category: item.category,
-                        })
-                      }
-                    />
-                  );
-                })}
-
-                <Gap width={16} />
-              </View>
-            </ScrollView>
-          </View>
-
-          <Text style={styles.textDoctor}>Top Rated Doctors</Text>
-          <View style={styles.horizontalWrapper}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={styles.doctor}>
-                <Gap width={16} />
-                {doctors.map((doctor) => {
-                  return (
-                    <RatedDoctors
-                      key={doctor.id}
-                      name={doctor.name}
-                      spesialis={doctor.spesialis}
-                      rate={doctor.rate}
-                      avatar={doctor.avatar}
-                      onPress={(name, avatar) =>
-                        navigation.navigate('ProfileDoctor', {
-                          name: doctor.name,
-                          avatar: doctor.avatar,
-                          spesialis: doctor.spesialis,
-                          type: 'uri',
-                        })
-                      }
-                    />
-                  );
-                })}
-
-                <Gap width={16} />
-              </View>
-            </ScrollView>
-          </View>
-          <Text style={styles.textHospitals}>Top Rated Hospitals</Text>
-          <View style={styles.horizontalWrapper}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={styles.cardHospitals}>
-                <Gap width={16} />
-                <RatedHospitals
-                  name="Siloam Internasional Karawaci"
-                  address="Jl"
-                  rating={5}
-                />
-                <RatedHospitals
-                  name="RS Sadikin Bandung"
-                  address="Jl"
-                  rating={5}
-                />
-                <RatedHospitals
-                  name="RS Siloam Karawaci"
-                  address="Jl"
-                  rating={5}
-                />
-                <RatedHospitals name="RS Dewi Sri" address="Jl" rating={5} />
-                <RatedHospitals name="RS Bayukarta" address="Jl" rating={5} />
-                <RatedHospitals
-                  name="RS Mitra Keluarga"
-                  address="Jl"
-                  rating={5}
-                />
-              </View>
-            </ScrollView>
-          </View>
-
+          {profile.type === 'user' && checkIfNotDoctor()}
           <Text style={styles.textHospitals}>Hot News</Text>
-
-          <View style={styles.news}>
-            <CardNews
-              title="Saat Para Pramugari Cantik Terdampak Corona, Kini Jualan Sate Hingga Gas"
-              publish="AybisSZR"
-              date="10 menit yang lalu"
-            />
-            <CardNews
-              title="Habib Rizieq Singgung Lahan PTPN Terlantar, BPN: Kedua Pihak Harus Buktikan"
-              publish="AybisSZR"
-              date="11 menit yang lalu"
-            />
-            <CardNews
-              title="Rapid Test Antigen Rp 105.000 Kini Tersedia di 25 Stasiun KAI"
-              publish="AybisSZR"
-              date="12 menit yang lalu"
-            />
-            <CardNews
-              title="Pulihkan Ekonomi Perbatasan, BRI Salurkan BPUM ke Ratusan UMKM"
-              publish="AybisSZR"
-              date="13 menit yang lalu"
-            />
-            <CardNews
-              title="Larang Batik Air Terbang, Gubernur Kalbar Juga Sentil Kemenhub"
-              publish="AybisSZR"
-              date="14 menit yang lalu"
-            />
-            <CardNews
-              title="Nggak Cuma Mobil, Beli Boneka Seks di Inggris Bisa 'Test Drive'"
-              publish="AybisSZR"
-              date="15 menit yang lalu"
-            />
-            <CardNews
-              title="Asosiasi Maskapai Sentil Aturan Larangan Terbang dari Gubernur Kalbar"
-              publish="AybisSZR"
-              date="16 menit yang lalu"
-            />
-            <CardNews
-              title="Viral Dugaan Pasien-Nakes Mesum Sesama Jenis, Wisma Atlet: Belum Ada Laporan"
-              publish="AybisSZR"
-              date="17 menit yang lalu"
-            />
-            <CardNews
-              title="Ratusan Wisatawan di Puncak Bogor Di-rapid Antigen, 4 Orang Reaktif"
-              publish="AybisSZR"
-              date="18 menit yang lalu"
-            />
-          </View>
+          <View style={styles.news} />
+          {news.map((item, index) => {
+            return (
+              <CardNews
+                key={`news-${index}`}
+                title={item.title}
+                date={item.publishedAt}
+                publish={item.source.name}
+                image={item.urlToImage}
+              />
+            );
+          })}
         </View>
         <Gap height={24} />
       </ScrollView>

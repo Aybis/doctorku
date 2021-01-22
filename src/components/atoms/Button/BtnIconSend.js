@@ -1,13 +1,19 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {ICSendActive, ICSendDisable} from '../../../assets';
-import {colors} from '../../../utils';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ICSendActive, ICSendDisable } from '../../../assets';
+import { colors } from '../../../utils';
 
-const BtnIconSend = ({disable, onPress}) => {
+const BtnIconSend = ({ disable, onPress }) => {
+  if (disable) {
+    return (
+      <View style={styles.container(disable)}>
+        <ICSendActive />
+      </View>
+    );
+  }
   return (
     <TouchableOpacity style={styles.container(disable)} onPress={onPress}>
-      {disable && <ICSendDisable />}
-      {!disable && <ICSendActive />}
+      <ICSendActive />
     </TouchableOpacity>
   );
 };

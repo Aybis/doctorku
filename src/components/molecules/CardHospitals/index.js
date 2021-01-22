@@ -1,18 +1,18 @@
 import React from 'react';
-import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
-import {DUHospital} from '../../../assets';
-import {colors, fonts} from '../../../utils';
-import {Rating} from '../../atoms';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { DUHospital } from '../../../assets';
+import { colors, fonts } from '../../../utils';
+import { Rating } from '../../atoms';
 
-const cardHospital = () => {
+const cardHospital = ({ name, address, phone, province }) => {
   return (
     <View style={styles.card}>
       <View style={styles.inner}>
         <Image source={DUHospital} style={styles.image} />
-        <Text style={styles.name}>Siloam International Karawaci</Text>
-        <Rating rating={5} />
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.phone}>{phone}</Text>
         <Text style={styles.address}>
-          Jl. Siloam No.6, Bencongan, Kelapa Dua, Tangerang, Banten 15811
+          {province} - {address}
         </Text>
       </View>
     </View>
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 10,
     width: (windowWith - 40) / 2 - 10,
-    height: (windowHeight - 20) / 3.4,
+    height: (windowHeight - 20) / 2.8,
     marginHorizontal: 5,
     marginBottom: 10,
     shadowColor: '#000',
@@ -53,16 +53,32 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   name: {
-    fontSize: 14,
+    marginTop: 2,
+    color: colors.text.default,
+    fontSize: 12,
     fontFamily: fonts.primary[700],
     textAlign: 'center',
-    marginBottom: 5,
   },
   address: {
     fontSize: 12,
-    fontFamily: fonts.primary[200],
+    fontFamily: fonts.primary[400],
     color: colors.text.default,
     textAlign: 'center',
-    marginTop: 5,
+    marginTop: 7,
+  },
+  province: {
+    textTransform: 'uppercase',
+    fontSize: 14,
+    fontFamily: fonts.primary[800],
+    color: colors.text.default,
+    textAlign: 'center',
+    // marginTop: 2,
+  },
+  phone: {
+    marginTop: 2,
+    fontSize: 12,
+    fontFamily: fonts.primary[600],
+    color: colors.text.default,
+    textAlign: 'center',
   },
 });

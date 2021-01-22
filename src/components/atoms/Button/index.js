@@ -1,11 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {colors, fonts} from '../../../utils';
+import { StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { colors, fonts } from '../../../utils';
 import BtnIconSend from './BtnIconSend';
 import IconOnly from './IconOnly';
 
-const Button = ({type, title, onPress, icon, disable}) => {
+const Button = ({ type, title, onPress, icon, disable }) => {
   if (type === 'icon-only') {
     return <IconOnly onPress={onPress} icon={icon} />;
   }

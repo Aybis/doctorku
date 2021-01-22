@@ -1,23 +1,17 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {DUNews3} from '../../../assets';
-import {colors, fonts} from '../../../utils';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { colors, fonts } from '../../../utils';
 
-const CardNews = ({title, date, publish}) => {
+const CardNews = ({ title, date, publish, image, desc }) => {
   return (
     <TouchableOpacity style={styles.container}>
-      <Image style={styles.image} source={DUNews3} />
+      <Image style={styles.image} source={{ uri: image }} />
       <View style={styles.textWrapper}>
         <Text style={styles.title}>{title}</Text>
+        {/* <Text style={styles.published}>{desc}</Text> */}
         <Text style={styles.published}>
           {publish} - {date}
         </Text>
-        <View style={styles.textPreview}>
-          <Text style={styles.text}>
-            Dolor incididunt deserunt cupidatat pariatur aute officia dolore
-            cupidatat ipsum irure nostrud ....
-          </Text>
-        </View>
       </View>
     </TouchableOpacity>
   );

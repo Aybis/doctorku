@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -7,86 +7,49 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import {ICFilter} from '../../assets';
-import {
-  DUAvatar,
-  DUProfileAlbert,
-  DUProfileDoctor2,
-  DUProfileDoctor4,
-  DUProfileDoctor5,
-  DUProfileDoctor7,
-  DUProfileDoctor8,
-  ICFilter,
-  JSONListDoctor,
-} from '../../assets';
-import {CardDoctor, Gap, Header, RatedDoctors} from '../../components';
-import {colors, fonts} from '../../utils';
+import { ICFilter, JSONListDoctor } from '../../assets';
+import { CardDoctor, Gap, Header, RatedDoctors } from '../../components';
+import { Firebase } from '../../config';
+import { colors, fonts, showError } from '../../utils';
 
-const ListDoctors = ({navigation, route}) => {
-  const {category} = route.params;
-  const [doctors] = useState([
-    {
-      id: 1,
-      avatar: DUAvatar,
-      name: 'Frisca Putri',
-      spesialis: 'Kandungan',
-      rate: 5,
-    },
-    {
-      id: 2,
-      avatar: DUProfileDoctor2,
-      name: 'Ayu Putri',
-      spesialis: 'Anak',
-      rate: 5,
-    },
-    {
-      id: 3,
-      avatar: DUProfileDoctor4,
-      name: 'Agus Halim',
-      spesialis: 'THT',
-      rate: 5,
-    },
-    {
-      id: 4,
-      avatar: DUProfileDoctor5,
-      name: 'Valencia',
-      spesialis: 'Kulit & Kelamin',
-      rate: 5,
-    },
-    {
-      id: 5,
-      avatar: DUProfileAlbert,
-      name: 'Johnson Astiago',
-      spesialis: 'Bedah Tulang',
-      rate: 5,
-    },
-    {
-      id: 6,
-      avatar: DUProfileDoctor7,
-      name: 'Abdul Malik',
-      spesialis: 'Anastesis',
-      rate: 5,
-    },
-    {
-      id: 7,
-      avatar: DUProfileDoctor8,
-      name: 'Anya Ger',
-      spesialis: 'Penyakit Dalam',
-      rate: 5,
-    },
-    {
-      id: 8,
-      avatar: DUProfileAlbert,
-      name: 'Tanoesoedibjo',
-      spesialis: 'Orthopedi',
-      rate: 5,
-    },
-  ]);
+const ListDoctors = ({ navigation, route }) => {
+  const itemCategory = route.params;
+  const [rateDoctor, setrateDoctor] = useState([]);
+
+  useEffect(() => {
+    getCategoryDoctor(itemCategory.category);
+  }, [itemCategory.category]);
+
+  const getCategoryDoctor = (category) => {
+    Firebase.database()
+      .ref('doctors/')
+      .orderByChild('category')
+      .equalTo(category)
+      .once('value')
+      .then((res) => {
+        if (res.val()) {
+          const oldData = res.val();
+          const data = [];
+          Object.keys(oldData).map((key) => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+          setrateDoctor(data);
+        } else {
+          return 'Doctor Not Found';
+        }
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
   return (
     <View style={styles.page}>
       {/* Start Header Component */}
       <Header
-        title={`Doctor ${category}`}
+        title={`Doctor ${itemCategory.category}`}
         onPress={() => navigation.goBack()}
       />
       {/* End Header Component */}
@@ -94,27 +57,20 @@ const ListDoctors = ({navigation, route}) => {
       {/* Start Rated Doctor Component */}
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.ratedDoctors}>
-          <Text style={styles.textRatedDoctors}>List Doctors</Text>
+          <Text style={styles.textRatedDoctors}>Top Rated Doctors</Text>
           <View style={styles.listRatedDoctorHorizontal} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.doctor}>
               <Gap width={16} />
-              {doctors.map((doctor) => {
+              {rateDoctor.map((doctor) => {
                 return (
                   <RatedDoctors
-                    key={doctor.id}
-                    name={doctor.name}
-                    spesialis={doctor.spesialis}
-                    rate={doctor.rate}
-                    avatar={doctor.avatar}
-                    onPress={() =>
-                      navigation.navigate('ProfileDoctor', {
-                        name: doctor.name,
-                        avatar: doctor.avatar,
-                        spesialis: category,
-                        type: 'uri',
-                      })
-                    }
+                    key={`doctor-${doctor.id}`}
+                    name={doctor.data.fullName}
+                    spesialis={doctor.data.category}
+                    rate={doctor.data.rate}
+                    avatar={{ uri: doctor.data.photo }}
+                    onPress={() => navigation.navigate('ProfileDoctor', doctor)}
                   />
                 );
               })}
@@ -145,24 +101,12 @@ const ListDoctors = ({navigation, route}) => {
               return (
                 <CardDoctor
                   key={doctor.id}
-                  name={doctor.name}
-                  spesialis={category}
+                  name={doctor.fullName}
+                  spesialis={doctor.category}
                   avatar={doctor.image}
                   hospital={doctor.hospital}
-                  onPressMessage={() =>
-                    navigation.navigate('Chat', {
-                      name: doctor.name,
-                      status: 'online',
-                      image: doctor.image,
-                    })
-                  }
-                  onPressDoctor={() =>
-                    navigation.navigate('ProfileDoctor', {
-                      name: doctor.name,
-                      avatar: doctor.image,
-                      spesialis: category,
-                    })
-                  }
+                  onPressMessage={() => alert('disable dlu ya bro')}
+                  onPressDoctor={() => alert('Disable dlu ya bro')}
                 />
               );
             })}

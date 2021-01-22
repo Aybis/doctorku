@@ -1,33 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {ILPhoto} from '../../../assets';
-import {colors, fonts, getData} from '../../../utils';
-import {Button} from '../../atoms';
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { colors, fonts } from '../../../utils';
+import { Button } from '../../atoms';
 
-const HomeProfile = ({userProfile}) => {
-  const [profile, setprofile] = useState({
-    photo: ILPhoto,
-    fullName: '',
-    email: '',
-  });
-
-  // get data from local storage
-  useEffect(() => {
-    getData('user').then((res) => {
-      const data = res;
-      data.photo = {uri: res.photo};
-      setprofile(data);
-      console.log('im home');
-    });
-  }, []);
+const HomeProfile = ({ onPress, user }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={userProfile}>
-        <Image style={styles.avatar} source={profile.photo} />
+      <TouchableOpacity onPress={onPress}>
+        <Image style={styles.avatar} source={user.photo} />
       </TouchableOpacity>
       <View style={styles.header}>
-        <Text style={styles.name}>Hi, {profile.fullName}</Text>
+        <Text style={styles.name}>Hi, {user.fullName}</Text>
         <Button type="icon-only" icon="notification" />
       </View>
     </View>

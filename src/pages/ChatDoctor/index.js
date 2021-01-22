@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ChatItem, HeaderChat, InputChat } from '../../components';
-import { Firebase } from '../../config';
 import {
   colors,
   fonts,
@@ -10,9 +10,10 @@ import {
   setDateChat,
   showError,
 } from '../../utils';
+import { Firebase } from '../../config';
 
 const Chat = ({ navigation, route }) => {
-  const dataDoctor = route.params;
+  const dataPasien = route.params;
   const [chat, setchat] = useState('');
   const [User, setUser] = useState({});
   const [chatData, setChatData] = useState([]);
@@ -20,7 +21,7 @@ const Chat = ({ navigation, route }) => {
   // get data login from local storage
   useEffect(() => {
     getDataUserFromLocal();
-    const chatId = `${User.uid}_${dataDoctor.id}`;
+    const chatId = `${dataPasien.data.uid}_${User.uid}`;
     const urlFirebase = `chatting/${chatId}/allChat/`;
 
     Firebase.database()
@@ -51,7 +52,7 @@ const Chat = ({ navigation, route }) => {
           setChatData(allDataChat);
         }
       });
-  }, [dataDoctor.id, User.uid]);
+  }, [dataPasien.data.uid, User.uid]);
 
   const getDataUserFromLocal = () => {
     getData('user').then((res) => {
@@ -68,16 +69,18 @@ const Chat = ({ navigation, route }) => {
       chat: chat,
     };
 
-    const chatId = `${User.uid}_${dataDoctor.id}`;
+    const chatId = `${dataPasien.id}_${User.uid}`;
     const urlFirebase = `chatting/${chatId}/allChat/${setDateChat(today)}`;
-    const urlMessagePasien = `messages/${User.uid}/${chatId}`;
-    const urlMessageDoctor = `messages/${dataDoctor.id}/${chatId}`;
-    const dataHistoryChatForPasien = {
+    const urlMessageDoctor = `messages/${User.uid}/${chatId}`;
+    const urlMessagePasien = `messages/${dataPasien.data.uid}/${chatId}`;
+
+    const dataHistoryChatForDoctor = {
       lastContentChat: chat,
       lastChatDate: today.getTime(),
-      uidPartner: dataDoctor.id,
+      uidPartner: dataPasien.data.uid,
     };
-    const dataHistoryChatForDoctor = {
+
+    const dataHistoryChatForPasien = {
       lastContentChat: chat,
       lastChatDate: today.getTime(),
       uidPartner: User.uid,
@@ -98,16 +101,13 @@ const Chat = ({ navigation, route }) => {
         showError(err.message);
       });
   };
-
-  const scrollViewRef = useRef();
-
   return (
     <View style={styles.page}>
       {/* Start Header Component */}
       <HeaderChat
-        title={dataDoctor.data.fullName}
-        category={dataDoctor.data.category}
-        source={{ uri: dataDoctor.data.photo }}
+        title={dataPasien.data.fullName}
+        category={dataPasien.data.category}
+        source={{ uri: dataPasien.data.photo }}
         status="online"
         onPress={() => navigation.goBack()}
       />
@@ -117,10 +117,11 @@ const Chat = ({ navigation, route }) => {
       <View style={styles.content}>
         <View style={styles.wrap}>
           <ScrollView
-            ref={scrollViewRef}
-            onContentSizeChange={() =>
-              scrollViewRef.current.scrollToEnd({ animated: true })
-            }>
+            showsVerticalScrollIndicator={false}
+            ref={(scroll) => {
+              this.scroll = scroll;
+            }}
+            onContentSizeChange={() => this.scroll.scrollToEnd()}>
             {chatData.map((chatContent) => {
               return (
                 <View key={chatContent.id}>
@@ -133,7 +134,7 @@ const Chat = ({ navigation, route }) => {
                         isMe={isMe}
                         text={itemChat.data.chat}
                         date={itemChat.data.chatTime}
-                        avatar={isMe ? null : { uri: dataDoctor.data.photo }}
+                        avatar={isMe ? null : { uri: dataPasien.data.photo }}
                       />
                     );
                   })}
@@ -143,7 +144,7 @@ const Chat = ({ navigation, route }) => {
           </ScrollView>
         </View>
         <InputChat
-          doctor={dataDoctor.data.fullName}
+          doctor={dataPasien.data.fullName}
           value={chat}
           onChangeText={(value) => setchat(value)}
           onPressSend={chatSend}

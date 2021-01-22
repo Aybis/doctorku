@@ -1,11 +1,19 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {colors, fonts} from '../../../utils';
+import { StyleSheet, Text, View } from 'react-native';
+import { colors, fonts } from '../../../utils';
 
-const Card = ({title}) => {
+const Card = ({ title, type }) => {
+  let firstWord = '';
+  if (type === 'rs') {
+    firstWord = 'RS.';
+  }
+
+  if (type === 'spesialis') {
+    firstWord = 'Spesialis';
+  }
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{title}</Text>
+      <Text style={styles.text}>{`${firstWord} ${title}`}</Text>
     </View>
   );
 };
@@ -22,6 +30,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   text: {
+    textTransform: 'capitalize',
     fontFamily: fonts.primary[700],
     textAlign: 'center',
   },

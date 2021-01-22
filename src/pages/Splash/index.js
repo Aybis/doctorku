@@ -1,23 +1,21 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {ILLogo} from '../../assets';
-import {Firebase} from '../../config';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { ILLogo } from '../../assets';
+import { Firebase } from '../../config';
 
-const Splash = ({navigation}) => {
+const Splash = ({ navigation }) => {
   useEffect(() => {
-    setTimeout(() => {
-      Firebase.auth().onAuthStateChanged((user) => {
+    const unRemovePage = Firebase.auth().onAuthStateChanged((user) => {
+      setTimeout(() => {
         if (user) {
-          //user login
-          // console.log('login', user);
           navigation.replace('MainApp');
         } else {
-          //user logout
-          console.log(user);
           navigation.replace('GetStarted');
         }
-      });
-    }, 3000);
+      }, 3000);
+    });
+
+    return () => unRemovePage();
   }, [navigation]);
 
   return (

@@ -3,7 +3,14 @@ import {StyleSheet, Switch, Text, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {colors, fonts} from '../../../utils';
 
-const Input = ({label, type, value, disable, onChangeText}) => {
+const Input = ({
+  label,
+  type,
+  value,
+  disable,
+  onChangeText,
+  multiline = false,
+}) => {
   const Toggle = () => {
     if (type === 'password') {
       return (
@@ -51,6 +58,7 @@ const Input = ({label, type, value, disable, onChangeText}) => {
           onBlur={onBlurForm}
           placeholder={label}
           value={value}
+          multiline={multiline}
           onChangeText={onChangeText}
           editable={!disable}
           secureTextEntry={isSwitchEnabled}

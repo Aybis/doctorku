@@ -1,31 +1,31 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import {
   DUDokterAnak,
   DUDokterBedah,
   DUDokterKandungan,
   DUDokterUmum,
 } from '../../../assets';
-import {colors, fonts} from '../../../utils';
+import { colors, fonts } from '../../../utils';
 
-const CardCategory = ({category, onPress}) => {
+const CardCategory = ({ category, onPress }) => {
   const Icon = () => {
-    if (category === 'Umum') {
+    if (category === 'umum') {
       return <Image style={styles.avatar} source={DUDokterUmum} />;
     }
-    if (category === 'Anak') {
+    if (category === 'anak') {
       return <Image style={styles.avatar} source={DUDokterAnak} />;
     }
-    if (category === 'Bedah') {
+    if (category === 'bedah') {
       return <Image style={styles.avatar} source={DUDokterBedah} />;
     }
-    if (category === 'Jantung') {
+    if (category === 'jantung') {
       return <Image style={styles.avatar} source={DUDokterBedah} />;
     }
-    if (category === 'Kandungan') {
+    if (category === 'kandungan') {
       return <Image style={styles.avatar} source={DUDokterKandungan} />;
     }
-    if (category === 'Penyakit Dalam') {
+    if (category === 'penyakit dalam') {
       return <Image style={styles.avatar} source={DUDokterBedah} />;
     }
     return <Image style={styles.avatar} source={DUDokterUmum} />;
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textPrimary: {
+    textTransform: 'capitalize',
     fontSize: 14,
     fontFamily: fonts.primary[600],
     marginTop: 2,

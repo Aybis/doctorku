@@ -1,17 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {colors, fonts} from '../../../utils';
+import { StyleSheet, Text, View } from 'react-native';
+import { colors, fonts } from '../../../utils';
 
-const IsMe = () => {
+const IsMe = ({ text, date }) => {
   return (
     <View style={styles.container}>
       <View style={styles.chatContent}>
-        <Text style={styles.chat}>
-          Ibu Dokter, apakah memakan jeruk beserta kulitnya tiap hari itu buruk
-          untuk kesehatan?
-        </Text>
+        <Text style={styles.chat}>{text}</Text>
       </View>
-      <Text style={styles.date}>9.20 AM</Text>
+      <Text style={styles.date}>{date}</Text>
     </View>
   );
 };
@@ -24,12 +21,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   chatContent: {
-    maxWidth: '70%',
+    maxWidth: '80%',
     borderRadius: 8,
     padding: 12,
     paddingRight: 18,
     backgroundColor: colors.card.light,
     borderBottomRightRadius: 0,
+    marginRight: 10,
   },
   chat: {
     fontSize: 14,

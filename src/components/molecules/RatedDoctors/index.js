@@ -1,10 +1,9 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {DUAvatar} from '../../../assets';
-import {colors, fonts} from '../../../utils';
-import {Rating} from '../../atoms';
+import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { colors, fonts } from '../../../utils';
+import { Rating } from '../../atoms';
 
-const RatedDoctors = ({name, spesialis, avatar, rate, onPress}) => {
+const RatedDoctors = ({ name, spesialis, avatar, rate, onPress }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image style={styles.avatar} source={avatar} />
@@ -47,6 +46,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary[700],
   },
   spesialis: {
+    textTransform: 'capitalize',
     fontSize: 12,
     fontFamily: fonts.primary[300],
     color: colors.text.secondary,

@@ -11,6 +11,10 @@ import Chat from './Chat';
 import UserProfile from './UserProfile';
 import EditProfile from './EditProfile';
 import ProfileDoctor from './ProfileDoctor';
+import RegisterDoctor from './RegisterDoctor';
+import EditProfileDoctor from './EditProfileDoctor';
+import MessageDoctor from './MessagesDoctor';
+import ChatDoctor from './ChatDoctor';
 
 export {
   Splash,
@@ -26,4 +30,8 @@ export {
   UserProfile,
   EditProfile,
   ProfileDoctor,
+  RegisterDoctor,
+  EditProfileDoctor,
+  MessageDoctor,
+  ChatDoctor,
 };

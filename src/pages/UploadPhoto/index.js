@@ -1,34 +1,32 @@
-import React, {useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {ICAdd, ICRemvoe, ILPhoto} from '../../assets';
-import {Button, Gap, Header, Link} from '../../components';
-import {colors, fonts, storeData} from '../../utils';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import {showMessage} from 'react-native-flash-message';
-import {Firebase} from '../../config';
+import { ICAdd, ICRemvoe, ILPhoto } from '../../assets';
+import { Button, Gap, Header, Link } from '../../components';
+import { Firebase } from '../../config';
+import {
+  colors,
+  fonts,
+  getData,
+  showError,
+  showSuccess,
+  storeData,
+} from '../../utils';
 
-const UploadPhoto = ({navigation, route}) => {
-  const {fullName, email, uid} = route.params;
+const UploadPhoto = ({ navigation, route }) => {
+  const { fullName, email, uid, type } = route.params;
   const [hasPhoto, sethasPhoto] = useState(false);
   const [photo, setphoto] = useState(ILPhoto);
   const [photoForDB, setphotoForDB] = useState('');
 
   const getImage = () => {
-    // launchCamera for activate camera
-    //launchImageLibrary for get image from library
-
-    ImagePicker.launchImageLibrary({quality: 0.7}, (response) => {
-      console.log('response', response);
+    ImagePicker.launchImageLibrary({ quality: 0.7 }, (response) => {
       if (response.didCancel) {
-        showMessage({
-          message: 'oops, kok ga jadi milih photonya ?',
-          type: 'danger',
-          icon: 'danger',
-        });
+        showError('oops, kok ga jadi milih photonya ?');
       } else {
         setphotoForDB(`data:${response.type};base64, ${response.data}`);
 
-        const source = {uri: response.uri};
+        const source = { uri: response.uri };
 
         setphoto(source);
         sethasPhoto(true);
@@ -37,38 +35,56 @@ const UploadPhoto = ({navigation, route}) => {
   };
 
   const uploadAndContinue = () => {
-    // function update data to database use firebase
-    Firebase.database()
-      .ref(`users/${uid}/`)
-      .update({photo: photoForDB}, (error) => {
-        if (error) {
-          // The write failed...
-          showMessage({
-            message: 'Upload Photo error',
-            type: 'danger',
-            floating: true,
-            icon: 'danger',
-          });
-        } else {
-          // Data saved successfully!
-          showMessage({
-            message: 'Upload Photo was sucessfully updated',
-            type: 'success',
-            floating: true,
-            icon: 'success',
-          });
-          const data = route.params;
-          data.photo = photoForDB;
+    getData('user').then((getUser) => {
+      if (getUser.type === 'doctor') {
+        Firebase.database()
+          .ref(`doctors/${uid}/`)
+          .update({ photo: photoForDB }, (error) => {
+            if (error) {
+              // The write failed...
 
-          storeData('user', data);
-          navigation.replace('MainApp');
-        }
-      });
+              showError(error);
+            } else {
+              // Data saved successfully!
+              showSuccess('Success', 'Upload Photo was sucessfully updated');
+              const data = route.params;
+              data.photo = photoForDB;
+
+              storeData('user', data);
+              navigation.replace('MainApp');
+            }
+          });
+      }
+
+      if (getUser.type === 'user') {
+        Firebase.database()
+          .ref(`users/${uid}/`)
+          .update({ photo: photoForDB }, (error) => {
+            if (error) {
+              // The write failed...
+
+              showError(error);
+            } else {
+              // Data saved successfully!
+              showSuccess('Success', 'Upload Photo was sucessfully updated');
+              const data = route.params;
+              data.photo = photoForDB;
+
+              storeData('user', data);
+
+              navigation.replace('MainApp');
+            }
+          });
+      }
+    });
   };
 
   return (
     <View style={styles.page}>
-      <Header onPress={() => navigation.goBack()} title="Upload Photo" />
+      <Header
+        onPress={() => navigation.goBack()}
+        title={type === 'doctor' ? 'Upload Photo Doctor' : 'Upload Photo'}
+      />
 
       <View style={styles.content}>
         <View style={styles.profile}>

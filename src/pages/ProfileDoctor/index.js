@@ -8,33 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  DUProfileAlbert,
-  ICSend,
-  ICSendActive,
-  ICVector1,
-  ICVector2,
-  ILChat,
-} from '../../assets';
-import {Card, Gap, Header, Rating} from '../../components';
-import {colors, fonts} from '../../utils';
+import { ICVector1, ICVector2, ILChat } from '../../assets';
+import { Card, Gap, Header, Rating } from '../../components';
+import { colors, fonts } from '../../utils';
 
-const ProfileDoctor = ({navigation, route}) => {
-  const {name, avatar, spesialis, type} = route.params;
-
-  const ImageFrom = () => {
-    if (type === 'uri') {
-      return <Image source={avatar} style={styles.avatar} />;
-    }
-    return (
-      <Image
-        source={{
-          uri: avatar,
-        }}
-        style={styles.avatar}
-      />
-    );
-  };
+const ProfileDoctor = ({ navigation, route }) => {
+  const dataDoctor = route.params;
 
   return (
     <View style={styles.page}>
@@ -45,14 +24,21 @@ const ProfileDoctor = ({navigation, route}) => {
       {/* End Header Component */}
 
       <View style={styles.borderAvatar}>
-        <ImageFrom />
+        <Image
+          source={{
+            uri: dataDoctor.data.photo,
+          }}
+          style={styles.avatar}
+        />
       </View>
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.me}>
-            <Text style={styles.name}>Dr. {name}</Text>
+            <Text style={styles.name}>Dr. {dataDoctor.data.fullName}</Text>
             <Gap height={5} />
-            <Text style={styles.spesialis}>Spesialis {spesialis}</Text>
+            <Text style={styles.spesialis}>
+              Spesialis {dataDoctor.data.category}
+            </Text>
             <Gap height={5} />
 
             <Rating rating={5} height={14} width={14} />
@@ -61,22 +47,18 @@ const ProfileDoctor = ({navigation, route}) => {
           <View style={styles.aboutMe}>
             <Text style={styles.title}>ABOUT ME</Text>
             <Text style={styles.desc}>
-              Dr. {name} is a good doctor is a pediatrician who practices at
-              Siloam International. She as a Specialist in Obstetricians and
-              Pediatrician at the Faculty of Medicine, Universitas Gadjah Mada.
+              Dr. {dataDoctor.data.fullName} is {dataDoctor.data.about} a good
+              doctor is a pediatrician who practices at Siloam International.
+              She as a Specialist in Obstetricians and Pediatrician at the
+              Faculty of Medicine, Universitas Gadjah Mada.
             </Text>
             <Text style={styles.title}>SPECIALIZATION</Text>
             <View style={styles.card}>
-              <Card title="Reproduction" />
-              <Card title="Heart" />
-              <Card title="Kids" />
+              <Card title={dataDoctor.data.category} type="spesialis" />
             </View>
             <Text style={styles.title}>PRACTICE</Text>
             <View style={styles.card}>
-              <Card title="Siloam Internasional" />
-              <Card title="RS Sadikin" />
-              <Card title="RS Dewi Sri" />
-              <Card title="RS Mitra Keluarga" />
+              <Card title={dataDoctor.data.hospital} type="rs" />
             </View>
           </View>
           <Gap height={50} />
@@ -85,14 +67,7 @@ const ProfileDoctor = ({navigation, route}) => {
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() =>
-              navigation.navigate('Chat', {
-                name: name,
-                status: 'online',
-                image: avatar,
-                type: type,
-              })
-            }>
+            onPress={() => navigation.navigate('Chat', dataDoctor)}>
             <Image style={styles.icon} source={ILChat} />
             {/* <ICSend style={styles.icon} /> */}
           </TouchableOpacity>
@@ -151,6 +126,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   spesialis: {
+    textTransform: 'capitalize',
     fontSize: 14,
     fontFamily: fonts.primary[700],
     color: colors.text.secondary,

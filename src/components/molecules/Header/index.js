@@ -1,9 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {colors, fonts} from '../../../utils';
-import {Button, Gap} from '../../atoms';
+import { StyleSheet, Text, View } from 'react-native';
+import { colors, fonts } from '../../../utils';
+import { Button, Gap } from '../../atoms';
 
-const Header = ({onPress, title}) => {
+const Header = ({ onPress, title }) => {
   return (
     <View style={styles.container}>
       <Button type="icon-only" icon="back-dark" onPress={onPress} />
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
+    textTransform: 'capitalize',
     textAlign: 'center',
     flex: 1,
     fontSize: 24,

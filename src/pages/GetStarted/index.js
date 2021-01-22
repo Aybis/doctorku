@@ -1,10 +1,13 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {ILLogo} from '../../assets';
-import {Gap, Button} from '../../components';
-import {colors, fonts} from '../../utils';
+import { StyleSheet, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { ILLogo } from '../../assets';
+import { Gap, Button } from '../../components';
+import { colors, fonts } from '../../utils';
 
-const GetStarted = ({navigation}) => {
+const GetStarted = ({ navigation }) => {
+  const stateGlobal = useSelector((state) => state);
+
   return (
     <View style={styles.page}>
       <View style={styles.container}>
